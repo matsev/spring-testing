@@ -1,5 +1,6 @@
 package com.jayway.service;
 
+import com.jayway.domain.Account;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +19,10 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.junit.matchers.JUnitMatchers.hasItems;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:application-context.xml")
@@ -49,10 +51,10 @@ public class AccountServiceImplTest {
 
     @Test
     public void shouldGetAccount() {
-        ImmutableAccount expected = new ImmutableAccount(1L, 100);
-        ImmutableAccount immutableAccount = accountService.get(1L);
+        Account account = accountService.get(1L);
 
-        assertThat(immutableAccount, is(expected));
+        assertThat(account.getAccountNumber(), is(1L));
+        assertThat(account.getBalance(), is(100L));
     }
 
 
@@ -75,7 +77,7 @@ public class AccountServiceImplTest {
 
     @Test
     public void shouldWithdraw() {
-        ImmutableAccount account = accountService.withdraw(1L, 50);
+        Account account = accountService.withdraw(1L, 50);
 
         entityManager.flush();
 

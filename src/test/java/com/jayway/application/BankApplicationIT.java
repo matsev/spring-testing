@@ -4,6 +4,7 @@ import com.jayway.restassured.http.ContentType;
 import net.minidev.json.JSONObject;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
@@ -26,13 +27,13 @@ public class BankApplicationIT {
                 body("accountNumber", is(1)).
                 body("balance", is(100)).
         when().
-                get("/account/1");
+                get("/accounts/1");
     }
 
 
     @Test
     public void shouldDepositToAccount() {
-        Map<String, Long> body = Collections.singletonMap("amount", 50L);
+        Map<String, Long> body = Collections.singletonMap("amount", 10L);
         JSONObject jsonBody = new JSONObject(body);
 
         given().
@@ -43,7 +44,7 @@ public class BankApplicationIT {
                 response().
                     statusCode(HttpStatus.SC_NO_CONTENT).
         when().
-                post("/account/1/deposit");
+                post("/accounts/1/deposit");
     }
 
 
@@ -60,13 +61,13 @@ public class BankApplicationIT {
                 response().
                     statusCode(HttpStatus.SC_BAD_REQUEST).
         when().
-                post("/account/1/deposit");
+                post("/accounts/1/deposit");
     }
 
 
     @Test
     public void shouldWithdrawFromAccount() {
-        Map<String, Long> body = Collections.singletonMap("amount", 20L);
+        Map<String, Long> body = Collections.singletonMap("amount", 10L);
         JSONObject jsonBody = new JSONObject(body);
 
         given().
@@ -79,7 +80,7 @@ public class BankApplicationIT {
                     body("accountNumber", is(1)).
                     body("balance", is(greaterThan(0))).
         when().
-                post("/account/1/withdraw");
+                post("/accounts/1/withdraw");
     }
 
 
@@ -94,7 +95,20 @@ public class BankApplicationIT {
         expect().
                 statusCode(HttpStatus.SC_CONFLICT).
         when().
-                post("/account/1/withdraw");
+                post("/accounts/1/withdraw");
+    }
+
+
+    @Test
+    @Ignore
+    public void shouldGetAccounts() {
+        expect().
+                statusCode(HttpStatus.SC_OK).
+                contentType(ContentType.JSON).
+                body("size()", is(2)).
+                body("findAll {it}", hasItems(1, 2)).
+        when().
+                get("/accounts");
     }
 
 
@@ -103,9 +117,9 @@ public class BankApplicationIT {
         expect().
                 statusCode(HttpStatus.SC_CREATED).
                 header(HttpHeaders.LOCATION, startsWith(baseURI)).
-                header(HttpHeaders.LOCATION, containsString("/account/")).
+                header(HttpHeaders.LOCATION, containsString("/accounts/")).
         when().
-                post("/account");
+                post("/accounts");
     }
 
 
@@ -114,11 +128,11 @@ public class BankApplicationIT {
         expect().
                 statusCode(HttpStatus.SC_NOT_FOUND).
         when().
-                get("/account/0");
+                get("/accounts/0");
     }
 
     @Test
-    public void shouldNotOverdrawAccountDuringWithdraw() {
+    public void shouldNotOverdrawDuringWithdraw() {
         Map<String, Long> body = new HashMap<String, Long>(){{
             put("fromAccountNumber", 1L);
             put("toAccountNumber", 2L);

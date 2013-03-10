@@ -1,48 +1,49 @@
-package com.jayway.controller;
+package com.jayway.application;
 
-import com.jayway.service.AccountService;
-import com.jayway.service.ImmutableAccount;
 import net.minidev.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-@RunWith(MockitoJUnitRunner.class)
-public class BankControllerMvcTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration({"file:src/main/webapp/WEB-INF/application-context.xml", "file:src/main/webapp/WEB-INF/bank-servlet.xml"})
+@ActiveProfiles("test")
+@WebAppConfiguration
+@Transactional
+public class BankApplicationTest {
 
-    @Mock
-    AccountService accountServiceMock;
+    @Autowired
+    WebApplicationContext webApplicationContext;
 
     MockMvc mockMvc;
 
 
     @Before
-    public void setUp() {
-        mockMvc = MockMvcBuilders
-                .standaloneSetup(new BankController(accountServiceMock))
-                .build();
+    public void setup() {
+        mockMvc = webAppContextSetup(webApplicationContext).build();
     }
+
 
     @Test
     public void shouldPrint() throws Exception {
-        ImmutableAccount account = new ImmutableAccount(1L, 100L);
-
-        when(accountServiceMock.get(1L)).thenReturn(account);
-
         mockMvc
                 .perform(get("/accounts/1")
                         .accept(MediaType.APPLICATION_JSON))
@@ -52,9 +53,6 @@ public class BankControllerMvcTest {
 
     @Test
     public void shouldGetAccount() throws Exception {
-        ImmutableAccount account = new ImmutableAccount(1L, 100L);
-        when(accountServiceMock.get(1L)).thenReturn(account);
-
         mockMvc
                 .perform(get("/accounts/1")
                         .accept(MediaType.APPLICATION_JSON))
@@ -67,8 +65,6 @@ public class BankControllerMvcTest {
 
     @Test
     public void shouldGetAllAccounts() throws Exception {
-        when(accountServiceMock.getAllAccountNumbers()).thenReturn(Arrays.asList(1L, 2L));
-
         mockMvc
                 .perform(get("/accounts")
                         .accept(MediaType.APPLICATION_JSON))
@@ -89,8 +85,6 @@ public class BankControllerMvcTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBody.toString().getBytes()))
                 .andExpect(status().isNoContent());
-
-        verify(accountServiceMock).deposit(1L, 50L);
     }
 
 
@@ -99,8 +93,6 @@ public class BankControllerMvcTest {
         mockMvc
                 .perform(delete("/accounts/1"))
                 .andExpect(status().isNoContent());
-
-        verify(accountServiceMock).deleteAccount(1L);
     }
 
 
@@ -114,8 +106,6 @@ public class BankControllerMvcTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBody.toString().getBytes()))
                 .andExpect(status().isBadRequest());
-
-        verifyZeroInteractions(accountServiceMock);
     }
 
 
@@ -129,9 +119,9 @@ public class BankControllerMvcTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBody.toString().getBytes()))
-                .andExpect(status().isOk());
-
-        verify(accountServiceMock).withdraw(1L, 50L);
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("accountNumber", is(1)))
+                .andExpect(jsonPath("balance", is(50)));
     }
 
 
@@ -146,9 +136,6 @@ public class BankControllerMvcTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBody.toString().getBytes()))
                 .andExpect(status().isBadRequest());
-
-        verifyZeroInteractions(accountServiceMock);
     }
-
 }
 

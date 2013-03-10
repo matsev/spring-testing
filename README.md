@@ -34,10 +34,12 @@ If mock object is used as a Spring bean in an application context, it should be 
 ### Controller Tests
 
 The test *src/test/java/com/jayway/controller/BankControllerRequestTest.java* uses the existing `MockHttpServletRequest` and `MockHttpServletRespone` classes.
-The test *src/test/java/com/jayway/controller/BankControllerMvcTest.java* is based on the upcoming `MockMvc` framework.
+The test *src/test/java/com/jayway/controller/BankControllerMvcTest.java* is based on the `MockMvc` framework.
 
 
 ### Integration Tests
+
+The *src/test/java/com/jayway/application/BankApplication.java* is an Spring based integration tests that tests the entire stack based on pure Spring features, `MockMvc`, `@Transactional`, embedded database, etc.
 
 Two maven plugins have been added to the *pom.xml* file to automate the integration tests.
 * `jetty-maven-plugin` starts the application in pre-integration-test phase and stops it in the post-integration-test phase.

@@ -40,27 +40,19 @@ public class AccountEntity implements Account {
         balance -= amount;
     }
 
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof AccountEntity)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (!(o instanceof AccountEntity)) return false;
 
         AccountEntity that = (AccountEntity) o;
 
-        if (balance != that.balance) {
+        if (balance != that.balance) return false;
+        if (accountNumber != null ? !accountNumber.equals(that.accountNumber) : that.accountNumber != null)
             return false;
-        }
-        if (accountNumber != null ? !accountNumber.equals(that.accountNumber) : that.accountNumber != null) {
-            return false;
-        }
+
         return true;
     }
-
 
     @Override
     public int hashCode() {

@@ -27,7 +27,7 @@ class AccountServiceImpl implements AccountService {
     @Override
     public ImmutableAccount get(Long accountNumber) {
         AccountEntity account = getAccountEntity(accountNumber);
-        return new ImmutableAccount(account);
+        return new ImmutableAccount(account.getAccountNumber(), account.getBalance());
     }
 
 
@@ -44,7 +44,7 @@ class AccountServiceImpl implements AccountService {
         AccountEntity account = getAccountEntity(accountNumber);
         account.withdraw(amount);
         AccountEntity savedAccount = accountRepository.save(account);
-        return new ImmutableAccount(savedAccount);
+        return new ImmutableAccount(savedAccount.getAccountNumber(), savedAccount.getBalance());
     }
 
 

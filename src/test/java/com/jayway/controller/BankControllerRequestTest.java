@@ -1,26 +1,24 @@
 package com.jayway.controller;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.service.AccountService;
-import com.jayway.service.AccountServiceMockConfiguration;
+import com.jayway.service.ImmutableAccount;
 import net.minidev.json.JSONObject;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
 
 import java.util.Collections;
@@ -28,12 +26,9 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {BankControllerTestConfiguration.class, AccountServiceMockConfiguration.class})
-@ActiveProfiles("accountServiceMock")
+@RunWith(MockitoJUnitRunner.class)
 public class BankControllerRequestTest {
 
     MockHttpServletRequest requestMock;
@@ -41,15 +36,14 @@ public class BankControllerRequestTest {
     AnnotationMethodHandlerAdapter handlerAdapter;
     ObjectMapper mapper;
 
-    @Autowired
     BankController bankController;
 
-    @Autowired
+    @Mock
     AccountService accountServiceMock;
-
 
     @Before
     public void setUp() {
+        bankController = new BankController(accountServiceMock);
         requestMock = new MockHttpServletRequest();
         requestMock.setContentType(MediaType.APPLICATION_JSON_VALUE);
         requestMock.addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
@@ -57,7 +51,7 @@ public class BankControllerRequestTest {
         responseMock = new MockHttpServletResponse();
 
         handlerAdapter = new AnnotationMethodHandlerAdapter();
-        HttpMessageConverter[] messageConverters = {new MappingJacksonHttpMessageConverter()};
+        HttpMessageConverter[] messageConverters = {new MappingJackson2HttpMessageConverter()};
         handlerAdapter.setMessageConverters(messageConverters);
 
         mapper = new ObjectMapper();
@@ -72,8 +66,11 @@ public class BankControllerRequestTest {
 
     @Test
     public void shouldGetAccount() throws Exception {
+        ImmutableAccount account = new ImmutableAccount(1L, 100L);
+        when(accountServiceMock.get(1L)).thenReturn(account);
+
         requestMock.setMethod("GET");
-        requestMock.setRequestURI("/account/1");
+        requestMock.setRequestURI("/accounts/1");
 
         handlerAdapter.handle(requestMock, responseMock, bankController);
 
@@ -90,7 +87,7 @@ public class BankControllerRequestTest {
     @Test
     public void shouldDepositToAccount() throws Exception {
         requestMock.setMethod("POST");
-        requestMock.setRequestURI("/account/1/deposit");
+        requestMock.setRequestURI("/accounts/1/deposit");
         Map<String, Long> body = Collections.singletonMap("amount", 50L);
         JSONObject jsonBody = new JSONObject(body);
         requestMock.setContent(jsonBody.toString().getBytes());
@@ -104,11 +101,10 @@ public class BankControllerRequestTest {
     @Test
     public void shouldDeleteAccount() throws Exception {
         requestMock.setMethod("DELETE");
-        requestMock.setRequestURI("/account/1");
+        requestMock.setRequestURI("/accounts/1");
 
         handlerAdapter.handle(requestMock, responseMock, bankController);
 
         verify(accountServiceMock).deleteAccount(1L);
     }
-
 }

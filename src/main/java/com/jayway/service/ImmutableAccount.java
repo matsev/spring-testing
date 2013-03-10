@@ -9,14 +9,9 @@ public class ImmutableAccount implements Account {
     private final long balance;
 
 
-    ImmutableAccount(Long accountNumber, long balance) {
+    public ImmutableAccount(Long accountNumber, long balance) {
         this.accountNumber = accountNumber;
         this.balance = balance;
-    }
-
-
-    ImmutableAccount(Account account) {
-        this(account.getAccountNumber(), account.getBalance());
     }
 
 
@@ -34,21 +29,15 @@ public class ImmutableAccount implements Account {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ImmutableAccount)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (!(o instanceof ImmutableAccount)) return false;
 
         ImmutableAccount that = (ImmutableAccount) o;
 
-        if (balance != that.balance) {
+        if (balance != that.balance) return false;
+        if (accountNumber != null ? !accountNumber.equals(that.accountNumber) : that.accountNumber != null)
             return false;
-        }
-        if (accountNumber != null ? !accountNumber.equals(that.accountNumber) : that.accountNumber != null) {
-            return false;
-        }
+
         return true;
     }
 

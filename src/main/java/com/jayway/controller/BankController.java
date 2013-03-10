@@ -27,7 +27,7 @@ class BankController {
     }
 
 
-    @RequestMapping(value = "/account",
+    @RequestMapping(value = "/accounts",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)   // 201
@@ -38,7 +38,7 @@ class BankController {
     }
 
 
-    @RequestMapping(value = "account/{accountNumber}",
+    @RequestMapping(value = "/accounts/{accountNumber}",
             method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)   // 204
     void delete(@PathVariable("accountNumber") long accountNumber) {
@@ -46,7 +46,7 @@ class BankController {
     }
 
 
-    @RequestMapping(value = "/account/{accountNumber}",
+    @RequestMapping(value = "/accounts/{accountNumber}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -55,7 +55,7 @@ class BankController {
     }
 
 
-    @RequestMapping(value = "/account/{accountNumber}/deposit",
+    @RequestMapping(value = "/accounts/{accountNumber}/deposit",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)   // 204
@@ -65,7 +65,7 @@ class BankController {
     }
 
 
-    @RequestMapping(value = "/account/{accountNumber}/withdraw",
+    @RequestMapping(value = "/accounts/{accountNumber}/withdraw",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -76,7 +76,7 @@ class BankController {
     }
 
 
-    @RequestMapping(value = "/account",
+    @RequestMapping(value = "/accounts",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
