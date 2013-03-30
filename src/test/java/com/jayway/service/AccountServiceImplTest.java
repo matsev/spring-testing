@@ -160,9 +160,9 @@ public class AccountServiceImplTest {
             // Expected
         }
 
-        long secondBalance = getBalance(1L);
+        long balance = getBalance(1L);
 
-        assertThat(secondBalance, is(100L));
+        assertThat(balance, is(100L));
     }
 
 
@@ -181,6 +181,6 @@ public class AccountServiceImplTest {
 
 
     long getBalance(Long accountNumber) {
-        return jdbcTemplate.queryForLong("SELECT balance FROM account_t WHERE account_number = ?", accountNumber);
+        return jdbcTemplate.queryForObject("SELECT balance FROM account_t WHERE account_number = ?", Long.class, accountNumber);
     }
 }
