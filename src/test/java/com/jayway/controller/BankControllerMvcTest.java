@@ -1,8 +1,9 @@
 package com.jayway.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.service.AccountService;
 import com.jayway.service.ImmutableAccount;
-import net.minidev.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,12 +83,12 @@ public class BankControllerMvcTest {
     @Test
     public void shouldDepositToAccount() throws Exception {
         Map<String, Long> body = Collections.singletonMap("amount", 50L);
-        JSONObject jsonBody = new JSONObject(body);
+        String json = toJsonString(body);
 
         mockMvc
                 .perform(post("/accounts/1/deposit")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonBody.toString().getBytes()))
+                        .content(json))
                 .andExpect(status().isNoContent());
 
         verify(accountServiceMock).deposit(1L, 50L);
@@ -107,12 +108,12 @@ public class BankControllerMvcTest {
     @Test
     public void shouldNotDepositNegativeAmount() throws Exception {
         Map<String, Long> body = Collections.singletonMap("amount", -50L);
-        JSONObject jsonBody = new JSONObject(body);
+        String json = toJsonString(body);
 
         mockMvc
                 .perform(post("/accounts/1/deposit")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonBody.toString().getBytes()))
+                        .content(json))
                 .andExpect(status().isBadRequest());
 
         verifyZeroInteractions(accountServiceMock);
@@ -122,13 +123,13 @@ public class BankControllerMvcTest {
     @Test
     public void shouldWithdrawFromAccount() throws Exception {
         Map<String, Long> body = Collections.singletonMap("amount", 50L);
-        JSONObject jsonBody = new JSONObject(body);
+        String json = toJsonString(body);
 
         mockMvc
                 .perform(post("/accounts/1/withdraw")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonBody.toString().getBytes()))
+                        .content(json))
                 .andExpect(status().isOk());
 
         verify(accountServiceMock).withdraw(1L, 50L);
@@ -138,17 +139,25 @@ public class BankControllerMvcTest {
     @Test
     public void shouldNotWithdrawNegativeAmount() throws Exception {
         Map<String, Long> body = Collections.singletonMap("amount", -50L);
-        JSONObject jsonBody = new JSONObject(body);
+        String json = toJsonString(body);
 
         mockMvc
                 .perform(post("/accounts/1/withdraw")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonBody.toString().getBytes()))
+                        .content(json))
                 .andExpect(status().isBadRequest());
 
         verifyZeroInteractions(accountServiceMock);
     }
 
+    private String toJsonString(Map<String, ?> map) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 

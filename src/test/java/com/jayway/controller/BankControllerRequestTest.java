@@ -1,11 +1,11 @@
 package com.jayway.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.service.AccountService;
 import com.jayway.service.ImmutableAccount;
-import net.minidev.json.JSONObject;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.junit.After;
@@ -89,8 +89,8 @@ public class BankControllerRequestTest {
         requestMock.setMethod("POST");
         requestMock.setRequestURI("/accounts/1/deposit");
         Map<String, Long> body = Collections.singletonMap("amount", 50L);
-        JSONObject jsonBody = new JSONObject(body);
-        requestMock.setContent(jsonBody.toString().getBytes());
+        String json = toJsonString(body);
+        requestMock.setContent(json.getBytes());
 
         handlerAdapter.handle(requestMock, responseMock, bankController);
 
@@ -106,5 +106,15 @@ public class BankControllerRequestTest {
         handlerAdapter.handle(requestMock, responseMock, bankController);
 
         verify(accountServiceMock).deleteAccount(1L);
+    }
+
+
+    private String toJsonString(Map<String, ?> map) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

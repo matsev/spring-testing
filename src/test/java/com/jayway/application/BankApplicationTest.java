@@ -1,6 +1,7 @@
 package com.jayway.application;
 
-import net.minidev.json.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -78,12 +79,12 @@ public class BankApplicationTest {
     @Test
     public void shouldDepositToAccount() throws Exception {
         Map<String, Long> body = Collections.singletonMap("amount", 50L);
-        JSONObject jsonBody = new JSONObject(body);
+        String json = toJsonString(body);
 
         mockMvc
                 .perform(post("/accounts/1/deposit")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonBody.toString().getBytes()))
+                        .content(json))
                 .andExpect(status().isNoContent());
     }
 
@@ -99,12 +100,12 @@ public class BankApplicationTest {
     @Test
     public void shouldNotDepositNegativeAmount() throws Exception {
         Map<String, Long> body = Collections.singletonMap("amount", -50L);
-        JSONObject jsonBody = new JSONObject(body);
+        String json = toJsonString(body);
 
         mockMvc
                 .perform(post("/accounts/1/deposit")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonBody.toString().getBytes()))
+                        .content(json))
                 .andExpect(status().isBadRequest());
     }
 
@@ -112,13 +113,13 @@ public class BankApplicationTest {
     @Test
     public void shouldWithdrawFromAccount() throws Exception {
         Map<String, Long> body = Collections.singletonMap("amount", 50L);
-        JSONObject jsonBody = new JSONObject(body);
+        String json = toJsonString(body);
 
         mockMvc
                 .perform(post("/accounts/1/withdraw")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonBody.toString().getBytes()))
+                        .content(json))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("accountNumber", is(1)))
                 .andExpect(jsonPath("balance", is(50)));
@@ -128,14 +129,24 @@ public class BankApplicationTest {
     @Test
     public void shouldNotWithdrawNegativeAmount() throws Exception {
         Map<String, Long> body = Collections.singletonMap("amount", -50L);
-        JSONObject jsonBody = new JSONObject(body);
+        String json = toJsonString(body);
 
         mockMvc
                 .perform(post("/accounts/1/withdraw")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonBody.toString().getBytes()))
+                        .content(json))
                 .andExpect(status().isBadRequest());
+    }
+
+
+    private String toJsonString(Map<String, ?> map) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

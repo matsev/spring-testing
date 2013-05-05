@@ -1,7 +1,7 @@
 package com.jayway.application;
 
-import com.jayway.restassured.http.ContentType;
-import net.minidev.json.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.junit.Ignore;
@@ -23,7 +23,7 @@ public class BankApplicationIT {
     public void shouldGetSingleAccount() {
         expect().
                 statusCode(HttpStatus.SC_OK).
-                contentType(ContentType.JSON).
+                contentType(MediaType.APPLICATION_JSON_VALUE).
                 body("accountNumber", is(1)).
                 body("balance", is(100)).
         when().
@@ -34,12 +34,12 @@ public class BankApplicationIT {
     @Test
     public void shouldDepositToAccount() {
         Map<String, Long> body = Collections.singletonMap("amount", 10L);
-        JSONObject jsonBody = new JSONObject(body);
+        String json = toJsonString(body);
 
         given().
                 request().
                     contentType(MediaType.APPLICATION_JSON_VALUE).
-                    body(jsonBody).
+                    body(json).
         expect().
                 response().
                     statusCode(HttpStatus.SC_NO_CONTENT).
@@ -51,12 +51,12 @@ public class BankApplicationIT {
     @Test
     public void shouldNotDepositNegativeAmount() {
         Map<String, Long> body = Collections.singletonMap("amount", -10L);
-        JSONObject jsonBody = new JSONObject(body);
+        String json = toJsonString(body);
 
         given().
                 request().
                     contentType(MediaType.APPLICATION_JSON_VALUE).
-                    body(jsonBody).
+                    body(json).
         expect().
                 response().
                     statusCode(HttpStatus.SC_BAD_REQUEST).
@@ -68,12 +68,12 @@ public class BankApplicationIT {
     @Test
     public void shouldWithdrawFromAccount() {
         Map<String, Long> body = Collections.singletonMap("amount", 10L);
-        JSONObject jsonBody = new JSONObject(body);
+        String json = toJsonString(body);
 
         given().
                 request().
                     contentType(MediaType.APPLICATION_JSON_VALUE).
-                    body(jsonBody).
+                    body(json).
         expect().
                 response().
                     statusCode(HttpStatus.SC_OK).
@@ -87,11 +87,11 @@ public class BankApplicationIT {
     @Test
     public void shouldNotOverdraw() {
         Map<String, Long> body = Collections.singletonMap("amount", 200L);
-        JSONObject jsonBody = new JSONObject(body);
+        String json = toJsonString(body);
 
         given().
-                contentType(ContentType.JSON).
-                body(jsonBody).
+                contentType(MediaType.APPLICATION_JSON_VALUE).
+                body(json).
         expect().
                 statusCode(HttpStatus.SC_CONFLICT).
         when().
@@ -104,7 +104,7 @@ public class BankApplicationIT {
     public void shouldGetAccounts() {
         expect().
                 statusCode(HttpStatus.SC_OK).
-                contentType(ContentType.JSON).
+                contentType(MediaType.APPLICATION_JSON_VALUE).
                 body("size()", is(2)).
                 body("findAll {it}", hasItems(1, 2)).
         when().
@@ -138,14 +138,24 @@ public class BankApplicationIT {
             put("toAccountNumber", 2L);
             put("amount", 300L);
         }};
-        JSONObject jsonBody = new JSONObject(body);
+        String json = toJsonString(body);
 
         given().
                 contentType(MediaType.APPLICATION_JSON_VALUE).
-                body(jsonBody).
+                body(json).
         expect().
                 statusCode(HttpStatus.SC_CONFLICT).
         when().
                 post("/transfer");
+    }
+
+
+    private String toJsonString(Map<String, ?> map) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
