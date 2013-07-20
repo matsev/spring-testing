@@ -131,6 +131,7 @@ public class BankApplicationIT {
                 get("/accounts/0");
     }
 
+
     @Test
     public void shouldNotOverdrawDuringWithdraw() {
         Map<String, Long> body = new HashMap<String, Long>(){{

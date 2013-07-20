@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"file:src/main/webapp/WEB-INF/application-context.xml", "file:src/main/webapp/WEB-INF/bank-servlet.xml"})
+@ContextConfiguration({"/application-context.xml", "/bank-servlet.xml"})
 @ActiveProfiles("test")
 @WebAppConfiguration
 @Transactional

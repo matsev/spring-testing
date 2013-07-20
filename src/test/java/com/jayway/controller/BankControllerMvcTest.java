@@ -38,6 +38,7 @@ public class BankControllerMvcTest {
                 .build();
     }
 
+
     @Test
     public void shouldPrint() throws Exception {
         ImmutableAccount account = new ImmutableAccount(1L, 100L);

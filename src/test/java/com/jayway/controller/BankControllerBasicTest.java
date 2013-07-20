@@ -16,7 +16,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class BankControllerBasicTest {
     
-    
     @Mock
     AccountService accountServiceMock;
     

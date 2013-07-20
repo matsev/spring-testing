@@ -16,7 +16,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:application-context.xml", "classpath:bank-servlet.xml"})
+@ContextConfiguration({"/application-context.xml", "/bank-servlet.xml"})
 @TransactionConfiguration
 @Transactional
 @ActiveProfiles("test")
