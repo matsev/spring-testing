@@ -1,11 +1,13 @@
 package com.jayway.repository;
 
 
+import com.jayway.config.InMemoryRepositoryConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -15,8 +17,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/embedded-db-application-context.xml")
-public class EmbeddedDbConfigurationTest {
+@ContextConfiguration(classes = InMemoryRepositoryConfig.class)
+@ActiveProfiles("test")
+public class EmbeddedDbJavaConfigTest {
 
 
     JdbcTemplate jdbcTemplate;
@@ -35,7 +38,7 @@ public class EmbeddedDbConfigurationTest {
 
 
     long getBalance(long accountNumber) {
-        return jdbcTemplate.queryForLong("SELECT balance FROM account_t WHERE account_number = ?", accountNumber);
+        return jdbcTemplate.queryForObject("SELECT balance FROM account_t WHERE account_number = ?", Long.class, accountNumber);
     }
 
 

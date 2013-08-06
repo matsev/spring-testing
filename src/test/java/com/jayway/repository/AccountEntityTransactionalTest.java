@@ -43,7 +43,7 @@ public class AccountEntityTransactionalTest {
 
 
     long getBalance(long accountNumber) {
-        return jdbcTemplate.queryForLong("SELECT balance FROM account_t WHERE account_number = ?", accountNumber);
+        return jdbcTemplate.queryForObject("SELECT balance FROM account_t WHERE account_number = ?", Long.class, accountNumber);
     }
 
 
