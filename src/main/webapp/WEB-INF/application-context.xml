@@ -50,7 +50,7 @@
                 <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                     <!--property name="showSql" value="true" /-->
                     <!--property name="generateDdl" value="true" /-->
-                    <property name="databasePlatform" value="org.hibernate.dialect.HSQLDialect" />
+                    <property name="database" value="HSQL" />
                 </bean>
             </property>
         </bean>
@@ -58,7 +58,7 @@
 
 
     <beans profile="prod">
-        <jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/myds"/>
-        <jee:jndi-lookup id="entityManagerFactory" jndi-name="persistence/bankDemo"/>
+        <jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/myds" expected-type="javax.sql.DataSource"/>
+        <jee:jndi-lookup id="entityManagerFactory" jndi-name="persistence/bankDemo" expected-type="javax.persistence.EntityManagerFactory"/>
     </beans>
 </beans>
