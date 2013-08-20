@@ -21,11 +21,15 @@ public class BankApplicationIT {
 
     @Test
     public void shouldGetSingleAccount() {
+        given().
+                auth().
+                    basic("user", "secret").
         expect().
-                statusCode(HttpStatus.SC_OK).
-                contentType(MediaType.APPLICATION_JSON_VALUE).
-                body("accountNumber", is(1)).
-                body("balance", is(100)).
+                response().
+                    statusCode(HttpStatus.SC_OK).
+                    contentType(MediaType.APPLICATION_JSON_VALUE).
+                    body("accountNumber", is(1)).
+                    body("balance", is(100)).
         when().
                 get("/accounts/1");
     }
@@ -37,6 +41,8 @@ public class BankApplicationIT {
         String json = toJsonString(body);
 
         given().
+                auth().
+                    basic("user", "secret").
                 request().
                     contentType(MediaType.APPLICATION_JSON_VALUE).
                     body(json).
@@ -54,6 +60,8 @@ public class BankApplicationIT {
         String json = toJsonString(body);
 
         given().
+                auth().
+                    basic("user", "secret").
                 request().
                     contentType(MediaType.APPLICATION_JSON_VALUE).
                     body(json).
@@ -71,6 +79,8 @@ public class BankApplicationIT {
         String json = toJsonString(body);
 
         given().
+                auth().
+                    basic("user", "secret").
                 request().
                     contentType(MediaType.APPLICATION_JSON_VALUE).
                     body(json).
@@ -90,10 +100,14 @@ public class BankApplicationIT {
         String json = toJsonString(body);
 
         given().
-                contentType(MediaType.APPLICATION_JSON_VALUE).
-                body(json).
+                auth().
+                    basic("user", "secret").
+                request().
+                    contentType(MediaType.APPLICATION_JSON_VALUE).
+                    body(json).
         expect().
-                statusCode(HttpStatus.SC_CONFLICT).
+                response().
+                    statusCode(HttpStatus.SC_CONFLICT).
         when().
                 post("/accounts/1/withdraw");
     }
@@ -102,11 +116,15 @@ public class BankApplicationIT {
     @Test
     @Ignore
     public void shouldGetAccounts() {
+        given().
+                auth().
+                    basic("user", "secret").
         expect().
-                statusCode(HttpStatus.SC_OK).
-                contentType(MediaType.APPLICATION_JSON_VALUE).
-                body("size()", is(2)).
-                body("findAll {it}", hasItems(1, 2)).
+                response().
+                    statusCode(HttpStatus.SC_OK).
+                    contentType(MediaType.APPLICATION_JSON_VALUE).
+                    body("size()", is(2)).
+                    body("findAll {it}", hasItems(1, 2)).
         when().
                 get("/accounts");
     }
@@ -114,10 +132,14 @@ public class BankApplicationIT {
 
     @Test
     public void shouldCreateAccount() {
+        given().
+                auth().
+                    basic("user", "secret").
         expect().
-                statusCode(HttpStatus.SC_CREATED).
-                header(HttpHeaders.LOCATION, startsWith(baseURI)).
-                header(HttpHeaders.LOCATION, containsString("/accounts/")).
+                response().
+                    statusCode(HttpStatus.SC_CREATED).
+                    header(HttpHeaders.LOCATION, startsWith(baseURI)).
+                    header(HttpHeaders.LOCATION, containsString("/accounts/")).
         when().
                 post("/accounts");
     }
@@ -125,8 +147,12 @@ public class BankApplicationIT {
 
     @Test
     public void shouldNotGetUnknownAccount() {
+        given().
+                auth().
+                    basic("user", "secret").
         expect().
-                statusCode(HttpStatus.SC_NOT_FOUND).
+                response().
+                    statusCode(HttpStatus.SC_NOT_FOUND).
         when().
                 get("/accounts/0");
     }
@@ -142,10 +168,14 @@ public class BankApplicationIT {
         String json = toJsonString(body);
 
         given().
-                contentType(MediaType.APPLICATION_JSON_VALUE).
-                body(json).
+                auth().
+                    basic("user", "secret").
+                request().
+                    contentType(MediaType.APPLICATION_JSON_VALUE).
+                    body(json).
         expect().
-                statusCode(HttpStatus.SC_CONFLICT).
+                response().
+                    statusCode(HttpStatus.SC_CONFLICT).
         when().
                 post("/transfer");
     }
