@@ -17,16 +17,17 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-@Profile("test")
+@Profile("h2")
 @Configuration
 @EnableJpaRepositories("com.jayway.repository")
-public class InMemoryRepositoryConfig implements RepositoryConfig {
+public class H2RepositoryConfig implements RepositoryConfig {
 
     @Bean
     @Override
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder().
                 setType(EmbeddedDatabaseType.H2).
+                addScript("/db-compatibility-mode.sql").
                 addScript("/db-schema.sql").
                 addScript("/db-test-data.sql").
                 build();

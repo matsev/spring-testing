@@ -14,9 +14,9 @@ import javax.sql.DataSource;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = InMemoryRepositoryConfig.class)
-@ActiveProfiles("test")
-public class InMemoryRepositoryConfigTest {
+@ContextConfiguration(classes = H2RepositoryConfig.class)
+@ActiveProfiles("h2")
+public class H2RepositoryConfigTest {
 
     @Autowired
     DataSource dataSource;

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import static java.util.Collections.singleton;
 
-@Profile("test")
+@Profile({"h2", "mysql"})
 @Service
 class InMemoryUserDetailsService extends InMemoryUserDetailsManager {
 

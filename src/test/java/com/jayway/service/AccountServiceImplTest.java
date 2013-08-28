@@ -28,7 +28,7 @@ import static org.junit.Assert.fail;
 @ContextConfiguration("classpath:application-context.xml")
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
-@ActiveProfiles("test")
+@ActiveProfiles("h2")
 public class AccountServiceImplTest {
 
     @PersistenceContext

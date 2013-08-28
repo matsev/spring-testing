@@ -30,7 +30,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"/application-context.xml", "/security-context.xml"})
 @Transactional
-@ActiveProfiles("test")
+@ActiveProfiles("h2")
 public class SecureAccountServiceImplTest {
 
     @Autowired

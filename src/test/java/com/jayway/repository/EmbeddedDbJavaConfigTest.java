@@ -1,7 +1,7 @@
 package com.jayway.repository;
 
 
-import com.jayway.config.InMemoryRepositoryConfig;
+import com.jayway.config.H2RepositoryConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,8 +17,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = InMemoryRepositoryConfig.class)
-@ActiveProfiles("test")
+@ContextConfiguration(classes = H2RepositoryConfig.class)
+@ActiveProfiles("h2")
 public class EmbeddedDbJavaConfigTest {
 
 

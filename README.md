@@ -28,13 +28,13 @@ The test *src/test/java/com/jayway/service/AccountServiceImplTest.java* uses the
 
 A pure Mockito test that does not use any Spring releated tools is exemplified in *src/test/java/com/jayway/controller/BankControllerBasicTest*.
 
-If mock object is used as a Spring bean in an application context, it should be *reset* `Before` or `@After` a test to certify that it is always in clean state before the next test is executed.
+If mock object is used as a Spring bean in an application context, it should be *reset* `@Before` or `@After` a test to certify that it is always in clean state before the next test is executed.
 
 
 ### Controller Tests
 
 The test *src/test/java/com/jayway/controller/BankControllerRequestTest.java* uses the existing `MockHttpServletRequest` and `MockHttpServletRespone` classes.
-The test *src/test/java/com/jayway/controller/BankControllerMvcTest.java* is based on the `MockMvc` framework.
+The test *src/test/java/com/jayway/controller/BankControllerMvcTest.java* is based on the `Spring MVC Test Framework`.
 
 
 ### Integration Tests
@@ -46,4 +46,4 @@ Two maven plugins have been added to the *pom.xml* file to automate the integrat
 * `maven-failsafe-plugin` executes the integration test during the integration-test phase (ìn contrast to the `maven-surefire-plugin` that executes tests in the test phase).
 
 The *src/test/java/com/jayway/application/BankApplicationIT.java* is an integration test that uses `REST-assured` to verify that the application's REST API is working.
-
+In order to execute it, you must connect to MySQL, see *src/main/webapp/WEB-INF/application-context.xml* for details.

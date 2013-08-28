@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 @ContextConfiguration({"/application-context.xml", "/bank-servlet.xml"})
 @TransactionConfiguration
 @Transactional
-@ActiveProfiles("test")
+@ActiveProfiles("h2")
 public class BankControllerTransactionalTest {
 
 

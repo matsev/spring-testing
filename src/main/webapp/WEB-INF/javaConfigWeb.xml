@@ -19,7 +19,7 @@
 
     <context-param>
         <param-name>spring.profiles.active</param-name>
-        <param-value>test</param-value>
+        <param-value>mysql</param-value>
     </context-param>
 
     <servlet>
