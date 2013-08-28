@@ -11,9 +11,9 @@
             http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd">
 
 
-    <jdbc:embedded-database id="dataSource" type="HSQL">
-        <jdbc:script location="classpath:db-schema.sql"/>
-        <jdbc:script location="classpath:db-test-data.sql"/>
+    <jdbc:embedded-database id="dataSource" type="H2">
+        <jdbc:script location="classpath:db-schema.sql" />
+        <jdbc:script location="classpath:db-test-data.sql" />
     </jdbc:embedded-database>
 
 
@@ -32,7 +32,7 @@
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
                 <!--property name="showSql" value="true" /-->
                 <!--property name="generateDdl" value="true" /-->
-                <property name="databasePlatform" value="org.hibernate.dialect.HSQLDialect" />
+                <property name="database" value="H2" />
             </bean>
         </property>
     </bean>

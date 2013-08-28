@@ -26,7 +26,7 @@ public class InMemoryRepositoryConfig implements RepositoryConfig {
     @Override
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder().
-                setType(EmbeddedDatabaseType.HSQL).
+                setType(EmbeddedDatabaseType.H2).
                 addScript("/db-schema.sql").
                 addScript("/db-test-data.sql").
                 build();
@@ -42,7 +42,7 @@ public class InMemoryRepositoryConfig implements RepositoryConfig {
             put("hibernate.current_session_context_class", SpringSessionContext.class.getName());
         }});
         entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter() {{
-            setDatabase(Database.HSQL);
+            setDatabase(Database.H2);
         }});
         return entityManagerFactoryBean;
     }

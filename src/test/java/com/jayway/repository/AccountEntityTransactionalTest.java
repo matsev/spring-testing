@@ -1,10 +1,8 @@
 package com.jayway.repository;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -13,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import javax.validation.ConstraintViolationException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -26,25 +25,12 @@ public class AccountEntityTransactionalTest {
 
     @PersistenceContext
     EntityManager entityManager;
-    
+
     @Autowired
     AccountRepository accountRepository;
-    
+
     @Autowired
     DataSource dataSource;
-
-    JdbcTemplate jdbcTemplate;
-
-
-    @Before
-    public void setUp() {
-        jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
-
-    long getBalance(long accountNumber) {
-        return jdbcTemplate.queryForObject("SELECT balance FROM account_t WHERE account_number = ?", Long.class, accountNumber);
-    }
 
 
     @Test
@@ -54,16 +40,17 @@ public class AccountEntityTransactionalTest {
         assertThat(account.getAccountNumber(), is(1L));
         assertThat(account.getBalance(), is(100L));
     }
-    
-    
+
+
     @Test
     public void shouldDeposit() {
         AccountEntity account = accountRepository.findOne(1L);
         account.deposit(50L);
 
         entityManager.flush();
-        
-        assertThat(getBalance(1L), is(150L));
+
+        AccountEntity updated = accountRepository.findOne(1L);
+        assertThat(updated.getBalance(), is(150L));
     }
 
 
@@ -83,7 +70,19 @@ public class AccountEntityTransactionalTest {
 
         entityManager.flush();
 
-        assertThat(getBalance(1L), is(80L));
+        AccountEntity updated = accountRepository.findOne(1L);
+        assertThat(updated.getBalance(), is(80L));
     }
 
+
+    @Test(expected = ConstraintViolationException.class)
+    public void shouldNotAcceptNegativeBalance() {
+        AccountEntity account = accountRepository.findOne(1L);
+        account.withdraw(200L);
+
+        entityManager.flush();
+
+        AccountEntity updated = accountRepository.findOne(1L);
+        assertThat(updated.getBalance(), is(-100L));
+    }
 }
