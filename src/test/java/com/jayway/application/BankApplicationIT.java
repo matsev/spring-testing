@@ -42,6 +42,19 @@ public class BankApplicationIT {
 
 
     @Test
+    public void shouldDeleteAccount() {
+        given().
+                auth().
+                    basic("user", "secret").
+        expect().
+                response().
+                    statusCode(HttpStatus.SC_NO_CONTENT).
+        when().
+                delete("/accounts/1");
+    }
+
+
+    @Test
     public void shouldGetSingleAccount() {
         given().
                 auth().
@@ -180,7 +193,7 @@ public class BankApplicationIT {
 
 
     @Test
-    public void shouldNotOverdrawDuringWithdraw() {
+    public void shouldNotOverdrawDuringTransfer() {
         Map<String, Long> body = new HashMap<String, Long>(){{
             put("fromAccountNumber", 1L);
             put("toAccountNumber", 2L);

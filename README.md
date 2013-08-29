@@ -15,14 +15,18 @@ Test of the example database can be seen in *src/test/java/com/jayway/repository
 
 Transactions are used in some tests, e.g. *src/test/java/com/jayway/repository/AccountEntityTransactionalTest.java*.
 
-Rembember to *flush* your JPA entity manager and your Hibernate session to avoid false positives when testing.
+Remember to `flush()` your JPA entity managers and your Hibernate sessions to avoid false positives when testing.
 
 
-### Profiles
+### Spring Profiles
 
-An example of an application context with two profiles can be seen in *src/main/webapp/WEB-INF/application-context.xml*.
-The test *src/test/java/com/jayway/service/AccountServiceImplTest.java* uses the `@ActiveProfiles` annotation, and the *src/main/webapp/WEB-INF/web.xml* uses the `spring.profiles.active` context parameter.
-
+An example of an application context with three profiles can be seen in *src/main/webapp/WEB-INF/application-context.xml*.
+The test *src/test/java/com/jayway/service/AccountServiceImplTest.java* uses the `@ActiveProfiles` annotation, and the *src/main/webapp/WEB-INF/web.xml* uses the `spring.profiles.default` context parameter.
+The profiles used are:
+* `h2` that uses a H2 in-memory database
+* `mysql` that connects to a local MySQL database
+* `prod` (default) which simulates a JNDI database resource lookup
+Active a profile by setting `spring.profiles.active=[profile(s) to be active]`
 
 ### Mockito
 
@@ -46,4 +50,4 @@ Two maven plugins have been added to the *pom.xml* file to automate the integrat
 * `maven-failsafe-plugin` executes the integration test during the integration-test phase (ìn contrast to the `maven-surefire-plugin` that executes tests in the test phase).
 
 The *src/test/java/com/jayway/application/BankApplicationIT.java* is an integration test that uses `REST-assured` to verify that the application's REST API is working.
-In order to execute it, you must connect to MySQL, see *src/main/webapp/WEB-INF/application-context.xml* for details.
+In order to execute it, you must connect to MySQL, see the `mysql` profile in the *src/main/webapp/WEB-INF/application-context.xml*. Moreover, you need to launch Jetty with the `itest` profile.
