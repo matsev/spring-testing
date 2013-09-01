@@ -81,7 +81,7 @@ class AccountServiceImpl implements AccountService {
     @Override
     public List<Long> getAllAccountNumbers() {
         List<AccountEntity> accounts = accountRepository.findAll();
-        List<Long> result = new ArrayList<Long>(accounts.size());
+        List<Long> result = new ArrayList<>(accounts.size());
         for (AccountEntity account : accounts) {
             result.add(account.getAccountNumber());
         }

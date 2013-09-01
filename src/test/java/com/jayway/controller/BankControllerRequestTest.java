@@ -8,7 +8,6 @@ import com.jayway.service.AccountService;
 import com.jayway.service.ImmutableAccount;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +25,8 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BankControllerRequestTest {
@@ -55,12 +55,6 @@ public class BankControllerRequestTest {
         handlerAdapter.setMessageConverters(messageConverters);
 
         mapper = new ObjectMapper();
-    }
-
-
-    @After
-    public void tearDown() {
-        reset(accountServiceMock);
     }
 
 

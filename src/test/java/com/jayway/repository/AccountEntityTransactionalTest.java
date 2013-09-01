@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
 import javax.validation.ConstraintViolationException;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -28,9 +27,6 @@ public class AccountEntityTransactionalTest {
 
     @Autowired
     AccountRepository accountRepository;
-
-    @Autowired
-    DataSource dataSource;
 
 
     @Test
