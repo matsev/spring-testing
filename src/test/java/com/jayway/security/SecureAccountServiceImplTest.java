@@ -2,28 +2,22 @@ package com.jayway.security;
 
 import com.jayway.domain.Account;
 import com.jayway.service.AccountService;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
-import static java.util.Collections.singleton;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -36,26 +30,17 @@ public class SecureAccountServiceImplTest {
     @Autowired
     AccountService secureAccountService;
 
-    UserDetails accountOwnerUser;
-    UserDetails noAuthorityUser;
-
 
     @Before
     public void setUp() {
-        accountOwnerUser = new User("unknown", "password", singleton(new SimpleGrantedAuthority("ACCOUNT_OWNER")));
-        noAuthorityUser = new User("unknown", "password", Collections.<GrantedAuthority>emptySet());
-    }
-
-    
-    @After
-    public void tearDown() {
         SecurityContextHolder.clearContext();
     }
 
 
     @Test
     public void accountOwnerShouldGetAccount() {
-        authenticate(accountOwnerUser);
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ACCOUNT_OWNER");
+        authenticateWithAuthorities(authorities);
 
         Account account = secureAccountService.get(1L);
 
@@ -65,7 +50,7 @@ public class SecureAccountServiceImplTest {
 
     @Test(expected = AccessDeniedException.class)
     public void unAuthorizedShouldNotGetAccount() {
-        authenticate(noAuthorityUser);
+        authenticateWithAuthorities(AuthorityUtils.NO_AUTHORITIES);
 
         secureAccountService.get(1L);
     }
@@ -73,7 +58,8 @@ public class SecureAccountServiceImplTest {
 
     @Test
     public void accountOwnerShouldDeposit() {
-        authenticate(accountOwnerUser);
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ACCOUNT_OWNER");
+        authenticateWithAuthorities(authorities);
 
         secureAccountService.deposit(1L, 100);
     }
@@ -81,7 +67,7 @@ public class SecureAccountServiceImplTest {
 
     @Test(expected = AccessDeniedException.class)
     public void unAuthorizedShouldNotDeposit() {
-        authenticate(noAuthorityUser);
+        authenticateWithAuthorities(AuthorityUtils.NO_AUTHORITIES);
 
         secureAccountService.deposit(1L, 100);
     }
@@ -89,7 +75,8 @@ public class SecureAccountServiceImplTest {
 
     @Test
     public void accountOwnerShouldWithdraw() {
-        authenticate(accountOwnerUser);
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ACCOUNT_OWNER");
+        authenticateWithAuthorities(authorities);
 
         Account account = secureAccountService.withdraw(1L, 50);
 
@@ -99,7 +86,7 @@ public class SecureAccountServiceImplTest {
 
     @Test(expected = AccessDeniedException.class)
     public void unAuthorizedShouldNotWithdraw() {
-        authenticate(noAuthorityUser);
+        authenticateWithAuthorities(AuthorityUtils.NO_AUTHORITIES);
 
         secureAccountService.withdraw(1L, 50);
     }
@@ -107,7 +94,8 @@ public class SecureAccountServiceImplTest {
 
     @Test
     public void accountOwnerShouldTransfer() {
-        authenticate(accountOwnerUser);
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ACCOUNT_OWNER");
+        authenticateWithAuthorities(authorities);
 
         secureAccountService.transfer(1L, 2L, 10);
     }
@@ -115,7 +103,7 @@ public class SecureAccountServiceImplTest {
 
     @Test(expected = AccessDeniedException.class)
     public void unAuthorizedShouldNotTransfer() {
-        authenticate(noAuthorityUser);
+        authenticateWithAuthorities(AuthorityUtils.NO_AUTHORITIES);
 
         secureAccountService.transfer(1L, 2L, 10);
     }
@@ -123,7 +111,8 @@ public class SecureAccountServiceImplTest {
 
     @Test
     public void accountOwnerShouldGetAllAccountNumbers() {
-        authenticate(accountOwnerUser);
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ACCOUNT_OWNER");
+        authenticateWithAuthorities(authorities);
 
         List<Long> allAccounts = secureAccountService.getAllAccountNumbers();
 
@@ -133,17 +122,15 @@ public class SecureAccountServiceImplTest {
 
     @Test(expected = AccessDeniedException.class)
     public void unAuthorizedShouldGetAllAccountNumbers() {
-        authenticate(noAuthorityUser);
+        authenticateWithAuthorities(AuthorityUtils.NO_AUTHORITIES);
 
         secureAccountService.getAllAccountNumbers();
     }
 
 
-    private void authenticate(UserDetails userDetails) {
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                userDetails.getPassword(),
-                userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+    private void authenticateWithAuthorities(List<GrantedAuthority> authorities) {
+        TestingAuthenticationToken authenticationToken = new TestingAuthenticationToken("name", "password", authorities);
+        authenticationToken.setAuthenticated(true);
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 }

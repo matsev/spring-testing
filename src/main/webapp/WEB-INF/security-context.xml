@@ -13,7 +13,7 @@
 
     <context:component-scan base-package="com.jayway.security" />
 
-    <http use-expressions="true" create-session="stateless" >
+    <http use-expressions="true" create-session="stateless">
         <intercept-url pattern="/**" access="isAuthenticated()" />
         <http-basic />
     </http>
@@ -21,7 +21,11 @@
     <global-method-security pre-post-annotations="enabled" />
 
     <authentication-manager>
-        <authentication-provider user-service-ref="inMemoryUserDetailsService" />
+        <authentication-provider>
+            <user-service>
+                <user name="user" password="secret" authorities="ACCOUNT_OWNER"/>
+            </user-service>
+        </authentication-provider>
     </authentication-manager>
 
 </beans:beans>
