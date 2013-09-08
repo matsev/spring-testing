@@ -12,9 +12,9 @@
 
 
     <jdbc:embedded-database id="dataSource" type="H2">
-        <jdbc:script location="classpath:db-compatibility-mode.sql" />
-        <jdbc:script location="classpath:db-schema.sql" />
-        <jdbc:script location="classpath:db-test-data.sql" />
+        <jdbc:script location="db-compatibility-mode.sql" />
+        <jdbc:script location="db-schema.sql" />
+        <jdbc:script location="db-test-data.sql" />
     </jdbc:embedded-database>
 
 

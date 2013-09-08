@@ -11,7 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AccountServiceImplBasicTest {
+public class AccountServiceImplMockitoTest {
 
     @Mock
     AccountRepository accountRepositoryMock;

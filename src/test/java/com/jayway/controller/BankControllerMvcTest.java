@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
@@ -19,7 +20,6 @@ import java.util.Map;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -42,13 +42,12 @@ public class BankControllerMvcTest {
     @Test
     public void shouldPrint() throws Exception {
         ImmutableAccount account = new ImmutableAccount(1L, 100L);
-
         when(accountServiceMock.get(1L)).thenReturn(account);
 
         mockMvc
                 .perform(get("/accounts/1")
                         .accept(MediaType.APPLICATION_JSON))
-                .andDo(print());
+                .andDo(MockMvcResultHandlers.print());
     }
 
 

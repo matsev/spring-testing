@@ -1,7 +1,7 @@
 ## Spring Testing
 
 This is a simplistic demo project intended to show how some of the Spring features can be used to improve your Spring test suite.
-The presentation can be found in *docs/presentation.pdf* and read the comments below to find out where each concept has been applied.
+You can read the comments below to find out where each concept has been applied.
 
 
 ### Embedded database

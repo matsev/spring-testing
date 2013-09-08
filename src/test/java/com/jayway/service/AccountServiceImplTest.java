@@ -77,12 +77,10 @@ public class AccountServiceImplTest {
 
     @Test
     public void shouldWithdraw() {
-        Account account = accountService.withdraw(1L, 50);
+        accountService.withdraw(1L, 50);
 
         entityManager.flush();
 
-        assertThat(account.getBalance(), is(50L));
-        
         long balance = getBalance(1L);
         assertThat(balance, is(50L));
     }
@@ -109,9 +107,9 @@ public class AccountServiceImplTest {
         entityManager.flush();
 
         long firstBalance = getBalance(1L);
-        long secondBalance = getBalance(2L);
-
         assertThat(firstBalance, is(90L));
+
+        long secondBalance = getBalance(2L);
         assertThat(secondBalance, is(210L));
     }
 
@@ -127,9 +125,9 @@ public class AccountServiceImplTest {
         }
 
         long firstBalance = getBalance(1L);
-        long secondBalance = getBalance(2L);
-
         assertThat(firstBalance, is(100L));
+
+        long secondBalance = getBalance(2L);
         assertThat(secondBalance, is(200L));
     }
 
@@ -145,7 +143,6 @@ public class AccountServiceImplTest {
         }
 
         long secondBalance = getBalance(2L);
-
         assertThat(secondBalance, is(200L));
     }
 
@@ -161,7 +158,6 @@ public class AccountServiceImplTest {
         }
 
         long balance = getBalance(1L);
-
         assertThat(balance, is(100L));
     }
 

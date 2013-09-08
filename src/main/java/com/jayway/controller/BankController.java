@@ -27,25 +27,6 @@ class BankController {
     }
 
 
-    @RequestMapping(value = "/accounts",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)   // 201
-    void create(HttpServletRequest request, HttpServletResponse response) {
-        long accountNumber = accountService.createAccount();
-        String locationHeader = createLocationHeader(request, accountNumber);
-        response.addHeader("Location", locationHeader);
-    }
-
-
-    @RequestMapping(value = "/accounts/{accountNumber}",
-            method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)   // 204
-    void delete(@PathVariable("accountNumber") long accountNumber) {
-        accountService.deleteAccount(accountNumber);
-    }
-
-
     @RequestMapping(value = "/accounts/{accountNumber}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -82,6 +63,25 @@ class BankController {
     @ResponseBody
     List<Long> getAll() {
         return accountService.getAllAccountNumbers();
+    }
+
+
+    @RequestMapping(value = "/accounts",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)   // 201
+    void create(HttpServletRequest request, HttpServletResponse response) {
+        long accountNumber = accountService.createAccount();
+        String locationHeader = createLocationHeader(request, accountNumber);
+        response.addHeader("Location", locationHeader);
+    }
+
+
+    @RequestMapping(value = "/accounts/{accountNumber}",
+            method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)   // 204
+    void delete(@PathVariable("accountNumber") long accountNumber) {
+        accountService.deleteAccount(accountNumber);
     }
 
 

@@ -42,15 +42,15 @@ public class BankApplicationIT {
 
 
     @Test
-    public void shouldDeleteAccount() {
+    public void shouldLog() {
         given().
                 auth().
                     basic("user", "secret").
+                log().all().
         expect().
-                response().
-                    statusCode(HttpStatus.SC_NO_CONTENT).
+                log().all().
         when().
-                delete("/accounts/1");
+                get("/accounts/1");
     }
 
 
@@ -67,6 +67,19 @@ public class BankApplicationIT {
                     body("balance", is(100)).
         when().
                 get("/accounts/1");
+    }
+
+
+    @Test
+    public void shouldDeleteAccount() {
+        given().
+                auth().
+                basic("user", "secret").
+        expect().
+                response().
+                    statusCode(HttpStatus.SC_NO_CONTENT).
+        when().
+                delete("/accounts/1");
     }
 
 

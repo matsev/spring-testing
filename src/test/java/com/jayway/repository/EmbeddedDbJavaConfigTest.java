@@ -38,16 +38,18 @@ public class EmbeddedDbJavaConfigTest {
 
 
     long getBalance(long accountNumber) {
-        return jdbcTemplate.queryForObject("SELECT balance FROM account_t WHERE account_number = ?", Long.class, accountNumber);
+        return jdbcTemplate.queryForObject(
+                "SELECT balance FROM account_t WHERE account_number = ?",
+                Long.class, accountNumber);
     }
 
 
     @Test
     public void verifyEmbeddedDatabase() {
         long firstBalance = getBalance(1);
-        long secondBalance = getBalance(2);
-
         assertThat(firstBalance, is(100L));
+
+        long secondBalance = getBalance(2);
         assertThat(secondBalance, is(200L));
     }
 

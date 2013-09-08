@@ -27,9 +27,9 @@ public class H2RepositoryConfig implements RepositoryConfig {
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder().
                 setType(EmbeddedDatabaseType.H2).
-                addScript("/db-compatibility-mode.sql").
-                addScript("/db-schema.sql").
-                addScript("/db-test-data.sql").
+                addScript("db-compatibility-mode.sql").
+                addScript("db-schema.sql").
+                addScript("db-test-data.sql").
                 build();
     }
 

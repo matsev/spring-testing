@@ -44,9 +44,9 @@ public class EmbeddedDbXmlConfigTest {
     @Test
     public void verifyEmbeddedDatabase() {
         long firstBalance = getBalance(1);
-        long secondBalance = getBalance(2);
-
         assertThat(firstBalance, is(100L));
+
+        long secondBalance = getBalance(2);
         assertThat(secondBalance, is(200L));
     }
 

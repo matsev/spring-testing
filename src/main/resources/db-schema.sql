@@ -5,4 +5,4 @@ CREATE TABLE account_t (
   balance BIGINT NOT NULL,
   PRIMARY KEY (account_number),
   CHECK (balance >= 0)
-)
+);
