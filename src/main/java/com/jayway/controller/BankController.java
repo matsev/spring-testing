@@ -5,9 +5,14 @@ import com.jayway.service.ImmutableAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionSystemException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
-@Controller
+@RestController
 class BankController {
 
     private final AccountService accountService;
@@ -30,7 +35,6 @@ class BankController {
     @RequestMapping(value = "/accounts/{accountNumber}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     ImmutableAccount get(@PathVariable("accountNumber") long accountId) {
         return accountService.get(accountId);
     }
@@ -50,7 +54,6 @@ class BankController {
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     ImmutableAccount withdraw(@PathVariable("accountNumber") long accountNumber,
                               @Valid @RequestBody Amount amount) {
         return accountService.withdraw(accountNumber, amount.getAmount());
@@ -60,7 +63,6 @@ class BankController {
     @RequestMapping(value = "/accounts",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     List<Long> getAll() {
         return accountService.getAllAccountNumbers();
     }
