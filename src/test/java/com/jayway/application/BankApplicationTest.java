@@ -2,6 +2,8 @@ package com.jayway.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.config.ApplicationConfig;
+import com.jayway.config.WebConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,8 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"/application-context.xml", "/bank-servlet.xml"})
-@ActiveProfiles("h2")
+@ContextConfiguration(classes = {WebConfig.class, ApplicationConfig.class})
+@ActiveProfiles({"h2", "disableSecurity"})
 @WebAppConfiguration
 @Transactional
 public class BankApplicationTest {

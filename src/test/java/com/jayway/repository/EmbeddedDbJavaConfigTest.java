@@ -1,13 +1,11 @@
 package com.jayway.repository;
 
 
-import com.jayway.config.H2RepositoryConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -17,8 +15,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = H2RepositoryConfig.class)
-@ActiveProfiles("h2")
+@ContextConfiguration(classes = EmbeddedDbJavaConfig.class)
 public class EmbeddedDbJavaConfigTest {
 
 

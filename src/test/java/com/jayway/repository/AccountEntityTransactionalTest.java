@@ -17,7 +17,8 @@ import static org.junit.Assert.assertThat;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/embedded-db-application-context.xml")
+@ContextConfiguration(classes = EmbeddedDbJavaConfig.class)
+// @ContextConfiguration("/embedded-db-application-context.xml")
 @Transactional
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class AccountEntityTransactionalTest {

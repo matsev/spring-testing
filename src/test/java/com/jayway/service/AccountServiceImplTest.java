@@ -1,5 +1,6 @@
 package com.jayway.service;
 
+import com.jayway.config.ApplicationConfig;
 import com.jayway.domain.Account;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,10 +26,11 @@ import static org.junit.Assert.fail;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:application-context.xml")
+@ContextConfiguration(classes = ApplicationConfig.class)
+// @ContextConfiguration("classpath:application-context.xml")
+@ActiveProfiles("h2")
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
-@ActiveProfiles("h2")
 public class AccountServiceImplTest {
 
     @PersistenceContext

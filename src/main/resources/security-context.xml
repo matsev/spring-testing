@@ -14,7 +14,7 @@
     <context:component-scan base-package="com.jayway.security" />
 
     <http use-expressions="true" create-session="stateless">
-        <intercept-url pattern="/**" access="isAuthenticated()" />
+        <intercept-url pattern="/com/jayway/repository" access="isAuthenticated()" />
         <http-basic />
     </http>
 

@@ -2,6 +2,8 @@ package com.jayway.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.config.ApplicationConfig;
+import com.jayway.config.SecurityConfig;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.junit.Before;
@@ -13,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.sql.DataSource;
 import java.util.Collections;
@@ -24,8 +27,10 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/application-context.xml")
+@ContextConfiguration(classes = {ApplicationConfig.class, SecurityConfig.class})
+// @ContextConfiguration({"/application-context.xml", "/security-context.xml"})
 @ActiveProfiles("mysql")
+@WebAppConfiguration
 public class BankApplicationIT {
 
     @Autowired

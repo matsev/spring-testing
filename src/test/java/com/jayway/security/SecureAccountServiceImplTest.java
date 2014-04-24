@@ -1,5 +1,7 @@
 package com.jayway.security;
 
+import com.jayway.config.ApplicationConfig;
+import com.jayway.config.SecurityConfig;
 import com.jayway.domain.Account;
 import com.jayway.service.AccountService;
 import org.junit.Before;
@@ -22,9 +24,10 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"/application-context.xml", "/security-context.xml"})
-@Transactional
+@ContextConfiguration(classes = {ApplicationConfig.class, SecurityConfig.class})
+// @ContextConfiguration({"/application-context.xml", "/security-context.xml"})
 @ActiveProfiles("h2")
+@Transactional
 public class SecureAccountServiceImplTest {
 
     @Autowired

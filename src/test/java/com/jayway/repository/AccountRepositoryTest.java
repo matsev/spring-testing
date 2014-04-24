@@ -16,7 +16,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/embedded-db-application-context.xml")
+@ContextConfiguration(classes = EmbeddedDbJavaConfig.class)
+// @ContextConfiguration("/embedded-db-application-context.xml")
 @Transactional
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class AccountRepositoryTest {
@@ -24,11 +25,11 @@ public class AccountRepositoryTest {
     @PersistenceContext
     EntityManager entityManager;
 
-    
+
     @Autowired
     AccountRepository accountRepository;
-    
-    
+
+
     @Test
     public void shouldGetAccountByNumber() {
         AccountEntity account = accountRepository.findOne(1L);
