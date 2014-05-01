@@ -142,7 +142,7 @@ public class BankApplicationTest {
     }
 
 
-    private String toJsonString(Map<String, ?> map) {
+    private static String toJsonString(Map<String, ?> map) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.writeValueAsString(map);

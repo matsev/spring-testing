@@ -2,36 +2,35 @@ package com.jayway.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.config.ApplicationConfig;
-import com.jayway.config.SecurityConfig;
+import com.jayway.config.SpringBootRunner;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-
-import javax.sql.DataSource;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.baseURI;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ApplicationConfig.class, SecurityConfig.class})
-// @ContextConfiguration({"/application-context.xml", "/security-context.xml"})
 @ActiveProfiles("mysql")
 @WebAppConfiguration
-public class BankApplicationIT {
+@IntegrationTest
+@SpringApplicationConfiguration(classes = SpringBootRunner.class)
+public class RestAssuredBankApplicationIT {
 
     @Autowired
     DataSource dataSource;
@@ -233,7 +232,7 @@ public class BankApplicationIT {
     }
 
 
-    private String toJsonString(Map<String, ?> map) {
+    private static String toJsonString(Map<String, ?> map) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.writeValueAsString(map);
