@@ -64,14 +64,15 @@ The [BankApplicationTest](src/test/java/com/jayway/application/BankApplicationTe
 is a Spring based integration tests that tests the entire stack based on pure Spring features,
 `MockMvc`, `@Transactional`, embedded database, etc.
 
-Two maven plugins have been added to the [pom.xml] file to automate the integration tests.
-* `jetty-maven-plugin` starts the application in pre-integration-test phase and stops it
-in the post-integration-test phase.
-* `maven-failsafe-plugin` executes the integration test during the integration-test phase
-(ìn contrast to the `maven-surefire-plugin` that executes tests in the test phase).
+The `maven-failsafe-plugin` has been added to the [pom.xml] file to automate the
+integration tests. It executes the integration test during the integration-test phase
+(in contrast to the `maven-surefire-plugin` that executes tests in the test phase).
+Moreover, it is activated by using the Maven `itest` profile.
 
-The [BankApplicationIT](src/test/java/com/jayway/application/BankApplicationIT.java) is an
-integration test that uses [REST-assured](https://code.google.com/p/rest-assured/) to verify
-that the application's REST API is working. In order to execute it, you must connect to
-MySQL, and enable the `mysql` Spring profile Moreover, you need to launch Jetty with the
-Maven `itest` profile.
+The [RestTemplateBankApplicationIT](src/test/java/com/jayway/application/RestTemplateBankApplicationIT.java)
+is an integration test based on Spring's `RestTemplate`. A similar test based on
+[REST-assured](https://code.google.com/p/rest-assured/) can be found in
+[RestAssuredBankApplicationIT](src/test/java/com/jayway/application/RestAssuredBankApplicationIT.java)
+In order to execute them, you must have a MySQL running locally that Spring can connect to.
+Alternatively, you can change the profile from `mysql` to `h2` the tests will use
+and embedded H2 database instead.
