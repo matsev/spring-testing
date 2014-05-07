@@ -56,7 +56,7 @@ public class RestTemplateBankApplicationIT {
 	@Test
 	public void shouldGetAccount() throws Exception {
 		ResponseEntity<Map> responseEntity = restTemplate
-				.getForEntity("http://localhost:8080/accounts/{accountNbr}", Map.class, 1);
+				.getForEntity("http://localhost:8080/accounts/{accountNumber}", Map.class, 1);
 
 		assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
 		assertThat(responseEntity.getHeaders().getContentType(), is(MediaType.APPLICATION_JSON));
@@ -70,7 +70,7 @@ public class RestTemplateBankApplicationIT {
 	@Test
 	public void shouldDeleteAccount() throws Exception {
 		ResponseEntity<Map> responseEntity = restTemplate
-				.exchange("http://localhost:8080/accounts/{accountNbr}",
+				.exchange("http://localhost:8080/accounts/{accountNumber}",
 						HttpMethod.DELETE, null, Map.class, 1);
 
 		assertThat(responseEntity.getStatusCode(), is(HttpStatus.NO_CONTENT));
@@ -80,13 +80,15 @@ public class RestTemplateBankApplicationIT {
 
 	@Test
 	public void shouldDepositToAccount() throws Exception {
+        // create payload
 		Map<String, Integer> body = Collections.singletonMap("amount", 50);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Map<String, Integer>> entity = new HttpEntity<>(body, headers);
 
+        // deposit
 		ResponseEntity<Map> responseEntity = restTemplate
-				.postForEntity("http://localhost:8080/accounts/{accountNbr}/deposit",
+				.postForEntity("http://localhost:8080/accounts/{accountNumber}/deposit",
 						entity, Map.class, 1);
 
 		assertThat(responseEntity.getStatusCode(), is(HttpStatus.NO_CONTENT));
@@ -96,13 +98,15 @@ public class RestTemplateBankApplicationIT {
 
     @Test
     public void shouldNotDepositNegativeAmount() {
+        // create payload
 		Map<String, Integer> body = Collections.singletonMap("amount", -10);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Map<String, Integer>> entity = new HttpEntity<>(body, headers);
 
+        // deposit
 		ResponseEntity<Void> responseEntity = restTemplate
-				.postForEntity("http://localhost:8080/accounts/{accountNbr}/deposit",
+				.postForEntity("http://localhost:8080/accounts/{accountNumber}/deposit",
 						entity, Void.class, 1);
 
 		assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
@@ -111,29 +115,35 @@ public class RestTemplateBankApplicationIT {
 
     @Test
     public void shouldWithdrawFromAccount() {
+        // create payload
 		Map<String, Integer> body = Collections.singletonMap("amount", 10);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Map<String, Integer>> entity = new HttpEntity<>(body, headers);
 
+        // deposit
 		ResponseEntity<Map> responseEntity = restTemplate
-				.postForEntity("http://localhost:8080/accounts/{accountNbr}/deposit",
+				.postForEntity("http://localhost:8080/accounts/{accountNumber}/withdraw",
 						entity, Map.class, 1);
 
-		assertThat(responseEntity.getStatusCode(), is(HttpStatus.NO_CONTENT));
-		assertThat(responseEntity.getBody(), nullValue());
+		assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
+        Map<String, Integer> account = responseEntity.getBody();
+        assertThat(account.get("accountNumber"), is(1));
+        assertThat(account.get("balance"), is(90));
     }
 
 
 	@Test
     public void shouldNotOverdraw() {
+        // create payload
 		Map<String, Integer> body = Collections.singletonMap("amount", 200);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Map<String, Integer>> entity = new HttpEntity<>(body, headers);
 
+        // withdraw
 		ResponseEntity<Map> responseEntity = restTemplate
-				.postForEntity("http://localhost:8080/accounts/{accountNbr}/withdraw",
+				.postForEntity("http://localhost:8080/accounts/{accountNumber}/withdraw",
 						entity, Map.class, 1);
 
 		assertThat(responseEntity.getStatusCode(), is(HttpStatus.CONFLICT));
@@ -167,14 +177,48 @@ public class RestTemplateBankApplicationIT {
     @Test
     public void shouldNotGetUnknownAccount() {
 		ResponseEntity<Void> responseEntity = restTemplate
-				.getForEntity("http://localhost:8080/accounts/{accountNbr}", Void.class, 0);
+				.getForEntity("http://localhost:8080/accounts/{accountNumber}", Void.class, 0);
 
 		assertThat(responseEntity.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 
 
     @Test
+    public void shouldTransfer() {
+        // create payload
+        Map<String, Integer> body = new HashMap<String, Integer>(){{
+            put("fromAccountNumber", 1);
+            put("toAccountNumber", 2);
+            put("amount", 50);
+        }};
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Map<String, Integer>> entity = new HttpEntity<>(body, headers);
+
+        // transfer
+        ResponseEntity<Map> responseEntity = restTemplate.postForEntity("http://localhost:8080/transfer", entity, Map.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.NO_CONTENT));
+        assertThat(responseEntity.getBody(), nullValue());
+
+        // verify first account
+        responseEntity = restTemplate
+                .getForEntity("http://localhost:8080/accounts/{accountNumber}", Map.class, 1);
+        Map<String, Integer> account = responseEntity.getBody();
+        assertThat(account.get("accountNumber"), is(1));
+        assertThat(account.get("balance"), is(50));
+
+        // verify second account
+        responseEntity = restTemplate
+                .getForEntity("http://localhost:8080/accounts/{accountNumber}", Map.class, 2);
+        account = responseEntity.getBody();
+        assertThat(account.get("accountNumber"), is(2));
+        assertThat(account.get("balance"), is(250));
+    }
+
+
+    @Test
     public void shouldNotOverdrawDuringTransfer() {
+        // create payload
         Map<String, Integer> body = new HashMap<String, Integer>(){{
             put("fromAccountNumber", 1);
             put("toAccountNumber", 2);
@@ -184,6 +228,7 @@ public class RestTemplateBankApplicationIT {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Map<String, Integer>> entity = new HttpEntity<>(body, headers);
 
+        // transfer
 		ResponseEntity<Map> responseEntity = restTemplate.postForEntity("http://localhost:8080/transfer", entity, Map.class);
 		assertThat(responseEntity.getStatusCode(), is(HttpStatus.CONFLICT));
 		assertThat(responseEntity.getBody(), nullValue());

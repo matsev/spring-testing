@@ -141,7 +141,7 @@ public class RestAssuredBankApplicationIT {
                 response().
                     statusCode(HttpStatus.SC_OK).
                     body("accountNumber", is(1)).
-                    body("balance", is(greaterThan(0))).
+                    body("balance", is(90)).
         when().
                 post("/accounts/1/withdraw");
     }
@@ -207,6 +207,58 @@ public class RestAssuredBankApplicationIT {
                     statusCode(HttpStatus.SC_NOT_FOUND).
         when().
                 get("/accounts/0");
+    }
+
+
+    @Test
+    public void shouldTransfer() {
+        Map<String, Integer> body = new HashMap<String, Integer>(){{
+            put("fromAccountNumber", 1);
+            put("toAccountNumber", 2);
+            put("amount", 50);
+        }};
+        String json = toJsonString(body);
+
+        // transfer
+        given().
+                auth().
+                    basic("user", "secret").
+                request().
+                    contentType(MediaType.APPLICATION_JSON_VALUE).
+                    body(json).
+        expect().
+                response().
+                    statusCode(HttpStatus.SC_NO_CONTENT).
+        when().
+                post("/transfer");
+
+        // verify first account
+        given().
+                auth().
+                    basic("user", "secret").
+        expect().
+                response().
+                    statusCode(HttpStatus.SC_OK).
+                    contentType(MediaType.APPLICATION_JSON_VALUE).
+                    body("accountNumber", is(1)).
+                    body("balance", is(50)).
+        when().
+                get("/accounts/1");
+
+
+        // verify second account
+        given().
+                auth().
+                    basic("user", "secret").
+        expect().
+                response().
+                    statusCode(HttpStatus.SC_OK).
+                    contentType(MediaType.APPLICATION_JSON_VALUE).
+                    body("accountNumber", is(2)).
+                    body("balance", is(250)).
+        when().
+                get("/accounts/2");
+
     }
 
 

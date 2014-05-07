@@ -60,4 +60,12 @@ public class AccountEntity implements Account {
         result = 31 * result + balance;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "AccountEntity{" +
+                "accountNumber=" + accountNumber +
+                ", balance=" + balance +
+                '}';
+    }
 }

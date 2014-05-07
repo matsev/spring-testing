@@ -1,7 +1,6 @@
 package com.jayway.application;
 
 import com.jayway.config.SpringBootRunner;
-import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
@@ -13,6 +12,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -30,7 +31,7 @@ public class RestTemplateSecureBankApplicationIT {
 		RestTemplate restTemplate = new TestRestTemplate("user", "secret");
 
 		ResponseEntity<Map> responseEntity = restTemplate
-				.getForEntity("http://localhost:8080/accounts/{accountNbr}", Map.class, 1);
+				.getForEntity("http://localhost:8080/accounts/{accountNumber}", Map.class, 1);
 
 		assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
 	}
@@ -41,7 +42,7 @@ public class RestTemplateSecureBankApplicationIT {
 		RestTemplate restTemplate = new TestRestTemplate();
 
 		ResponseEntity<Void> responseEntity = restTemplate
-				.getForEntity("http://localhost:8080/accounts/{accountNbr}", Void.class, 1);
+				.getForEntity("http://localhost:8080/accounts/{accountNumber}", Void.class, 1);
 
 		assertThat(responseEntity.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
@@ -52,7 +53,7 @@ public class RestTemplateSecureBankApplicationIT {
 		RestTemplate restTemplate = new TestRestTemplate("unknown", "password");
 
 		ResponseEntity<Void> responseEntity = restTemplate
-				.getForEntity("http://localhost:8080/accounts/{accountNbr}", Void.class, 1);
+				.getForEntity("http://localhost:8080/accounts/{accountNumber}", Void.class, 1);
 
 		assertThat(responseEntity.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
