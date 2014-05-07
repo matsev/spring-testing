@@ -32,9 +32,9 @@ public class AccountRepositoryTest {
 
     @Test
     public void shouldGetAccountByNumber() {
-        AccountEntity account = accountRepository.findOne(1L);
+        AccountEntity account = accountRepository.findOne(1);
 
-        assertThat(account.getBalance(), is(100L));
+        assertThat(account.getBalance(), is(100));
     }
 
 
@@ -44,17 +44,17 @@ public class AccountRepositoryTest {
 
         entityManager.flush();
 
-        assertThat(account.getBalance(), is(0L));
+        assertThat(account.getBalance(), is(0));
     }
 
 
     @Test
     public void canDeleteAccount()  {
-        accountRepository.delete(1L);
+        accountRepository.delete(1);
 
         entityManager.flush();
 
-        assertThat(accountRepository.findOne(1L), nullValue());
+        assertThat(accountRepository.findOne(1), nullValue());
     }
 
 }

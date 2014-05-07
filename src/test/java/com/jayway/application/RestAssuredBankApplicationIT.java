@@ -3,10 +3,6 @@ package com.jayway.application;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.config.SpringBootRunner;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import javax.sql.DataSource;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.junit.Before;
@@ -20,6 +16,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import javax.sql.DataSource;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.baseURI;
 import static com.jayway.restassured.RestAssured.given;
@@ -89,7 +90,7 @@ public class RestAssuredBankApplicationIT {
 
     @Test
     public void shouldDepositToAccount() {
-        Map<String, Long> body = Collections.singletonMap("amount", 10L);
+        Map<String, Integer> body = Collections.singletonMap("amount", 10);
         String json = toJsonString(body);
 
         given().
@@ -108,7 +109,7 @@ public class RestAssuredBankApplicationIT {
 
     @Test
     public void shouldNotDepositNegativeAmount() {
-        Map<String, Long> body = Collections.singletonMap("amount", -10L);
+        Map<String, Integer> body = Collections.singletonMap("amount", -10);
         String json = toJsonString(body);
 
         given().
@@ -127,7 +128,7 @@ public class RestAssuredBankApplicationIT {
 
     @Test
     public void shouldWithdrawFromAccount() {
-        Map<String, Long> body = Collections.singletonMap("amount", 10L);
+        Map<String, Integer> body = Collections.singletonMap("amount", 10);
         String json = toJsonString(body);
 
         given().
@@ -148,7 +149,7 @@ public class RestAssuredBankApplicationIT {
 
     @Test
     public void shouldNotOverdraw() {
-        Map<String, Long> body = Collections.singletonMap("amount", 200L);
+        Map<String, Integer> body = Collections.singletonMap("amount", 200);
         String json = toJsonString(body);
 
         given().
@@ -211,10 +212,10 @@ public class RestAssuredBankApplicationIT {
 
     @Test
     public void shouldNotOverdrawDuringTransfer() {
-        Map<String, Long> body = new HashMap<String, Long>(){{
-            put("fromAccountNumber", 1L);
-            put("toAccountNumber", 2L);
-            put("amount", 300L);
+        Map<String, Integer> body = new HashMap<String, Integer>(){{
+            put("fromAccountNumber", 1);
+            put("toAccountNumber", 2);
+            put("amount", 300);
         }};
         String json = toJsonString(body);
 

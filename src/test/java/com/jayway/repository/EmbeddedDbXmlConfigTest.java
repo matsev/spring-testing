@@ -34,28 +34,28 @@ public class EmbeddedDbXmlConfigTest {
     }
 
 
-    long getBalance(long accountNumber) {
+    int getBalance(Integer accountNumber) {
         return jdbcTemplate.queryForObject(
                 "SELECT balance FROM account_t WHERE account_number = ?",
-                Long.class, accountNumber);
+                Integer.class, accountNumber);
     }
 
 
     @Test
     public void verifyEmbeddedDatabase() {
-        long firstBalance = getBalance(1);
-        assertThat(firstBalance, is(100L));
+        int firstBalance = getBalance(1);
+        assertThat(firstBalance, is(100));
 
-        long secondBalance = getBalance(2);
-        assertThat(secondBalance, is(200L));
+        int secondBalance = getBalance(2);
+        assertThat(secondBalance, is(200));
     }
 
 
     @Test
     public void ormMappingShouldWork() {
-        AccountEntity accountEntity = accountRepository.findOne(1L);
+        AccountEntity accountEntity = accountRepository.findOne(1);
 
-        assertThat(accountEntity.getAccountNumber(), is(1L));
-        assertThat(accountEntity.getBalance(), is(100L));
+        assertThat(accountEntity.getAccountNumber(), is(1));
+        assertThat(accountEntity.getBalance(), is(100));
     }
 }

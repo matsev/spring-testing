@@ -53,132 +53,132 @@ public class AccountServiceImplTest {
 
     @Test
     public void shouldGetAccount() {
-        Account account = accountService.get(1L);
+        Account account = accountService.get(1);
 
-        assertThat(account.getAccountNumber(), is(1L));
-        assertThat(account.getBalance(), is(100L));
+        assertThat(account.getAccountNumber(), is(1));
+        assertThat(account.getBalance(), is(100));
     }
 
 
     @Test(expected = UnknownAccountException.class)
     public void shouldThrowExceptionForFindingUnknownAccountNumber() {
-        accountService.get(-1L);
+        accountService.get(-1);
     }
 
 
     @Test
     public void shouldDeposit() {
-        accountService.deposit(1L, 100);
+        accountService.deposit(1, 100);
 
         entityManager.flush();
 
-        long balance = getBalance(1L);
-        assertThat(balance, is(200L));
+        int balance = getBalance(1);
+        assertThat(balance, is(200));
     }
 
 
     @Test
     public void shouldWithdraw() {
-        accountService.withdraw(1L, 50);
+        accountService.withdraw(1, 50);
 
         entityManager.flush();
 
-        long balance = getBalance(1L);
-        assertThat(balance, is(50L));
+        int balance = getBalance(1);
+        assertThat(balance, is(50));
     }
 
 
     @Test
     public void shouldNotOverdraw() {
         try {
-            accountService.withdraw(1L, 200);
+            accountService.withdraw(1, 200);
             entityManager.flush();
             fail("Expected ConstraintViolationException");
         } catch (ConstraintViolationException e) {
             // Expected
         }
 
-        long balance = getBalance(1L);
-        assertThat(balance, is(100L));
+        int balance = getBalance(1);
+        assertThat(balance, is(100));
     }
 
 
     @Test
     public void shouldTransfer() {
-        accountService.transfer(1L, 2L, 10);
+        accountService.transfer(1, 2, 10);
         entityManager.flush();
 
-        long firstBalance = getBalance(1L);
-        assertThat(firstBalance, is(90L));
+        int firstBalance = getBalance(1);
+        assertThat(firstBalance, is(90));
 
-        long secondBalance = getBalance(2L);
-        assertThat(secondBalance, is(210L));
+        int secondBalance = getBalance(2);
+        assertThat(secondBalance, is(210));
     }
 
 
     @Test
     public void shouldNotTransferIfOverdraw() {
         try {
-            accountService.transfer(1L, 2L, 200);
+            accountService.transfer(1, 2, 200);
             entityManager.flush();
             fail("Expected ConstraintViolationException");
         } catch (ConstraintViolationException e) {
             // Expected
         }
 
-        long firstBalance = getBalance(1L);
-        assertThat(firstBalance, is(100L));
+        int firstBalance = getBalance(1);
+        assertThat(firstBalance, is(100));
 
-        long secondBalance = getBalance(2L);
-        assertThat(secondBalance, is(200L));
+        int secondBalance = getBalance(2);
+        assertThat(secondBalance, is(200));
     }
 
 
     @Test
     public void shouldNotTransferFromUnknownAccount() {
         try {
-            accountService.transfer(-1L, 2L, 50);
+            accountService.transfer(-1, 2, 50);
             entityManager.flush();
             fail("Expected UnknownAccountException");
         } catch (UnknownAccountException e) {
             // Expected
         }
 
-        long secondBalance = getBalance(2L);
-        assertThat(secondBalance, is(200L));
+        int secondBalance = getBalance(2);
+        assertThat(secondBalance, is(200));
     }
 
 
     @Test
     public void shouldNotTransferToUnknownAccount() {
         try {
-            accountService.transfer(1L, -2L, 50);
+            accountService.transfer(1, -2, 50);
             entityManager.flush();
             fail("Expected UnknownAccountException");
         } catch (UnknownAccountException e) {
             // Expected
         }
 
-        long balance = getBalance(1L);
-        assertThat(balance, is(100L));
+        int balance = getBalance(1);
+        assertThat(balance, is(100));
     }
 
 
     @Test
     public void shouldGetAllAccountNumbers() {
-        List<Long> allAccounts = accountService.getAllAccountNumbers();
+        List<Integer> allAccounts = accountService.getAllAccountNumbers();
 
-        assertThat(allAccounts, hasItems(1L, 2L));
+        assertThat(allAccounts, hasItems(1, 2));
     }
 
 
     @Test(expected = UnknownAccountException.class)
     public void shouldThrowExceptionWhenDeletingUnknownAccountNumber() {
-        accountService.deleteAccount(-1L);
+        accountService.deleteAccount(-1);
     }
 
 
-    long getBalance(Long accountNumber) {
-        return jdbcTemplate.queryForObject("SELECT balance FROM account_t WHERE account_number = ?", Long.class, accountNumber);
+    int getBalance(Integer accountNumber) {
+        return jdbcTemplate.queryForObject("SELECT balance FROM account_t WHERE account_number = ?", Integer.class, accountNumber);
     }
 }

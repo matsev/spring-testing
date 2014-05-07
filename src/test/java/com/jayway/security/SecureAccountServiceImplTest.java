@@ -45,7 +45,7 @@ public class SecureAccountServiceImplTest {
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ACCOUNT_OWNER");
         authenticateWithAuthorities(authorities);
 
-        Account account = secureAccountService.get(1L);
+        Account account = secureAccountService.get(1);
 
         assertThat(account, notNullValue());
     }
@@ -55,7 +55,7 @@ public class SecureAccountServiceImplTest {
     public void unAuthorizedShouldNotGetAccount() {
         authenticateWithAuthorities(AuthorityUtils.NO_AUTHORITIES);
 
-        secureAccountService.get(1L);
+        secureAccountService.get(1);
     }
 
 
@@ -64,7 +64,7 @@ public class SecureAccountServiceImplTest {
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ACCOUNT_OWNER");
         authenticateWithAuthorities(authorities);
 
-        secureAccountService.deposit(1L, 100);
+        secureAccountService.deposit(1, 100);
     }
 
 
@@ -72,7 +72,7 @@ public class SecureAccountServiceImplTest {
     public void unAuthorizedShouldNotDeposit() {
         authenticateWithAuthorities(AuthorityUtils.NO_AUTHORITIES);
 
-        secureAccountService.deposit(1L, 100);
+        secureAccountService.deposit(1, 100);
     }
 
 
@@ -81,7 +81,7 @@ public class SecureAccountServiceImplTest {
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ACCOUNT_OWNER");
         authenticateWithAuthorities(authorities);
 
-        Account account = secureAccountService.withdraw(1L, 50);
+        Account account = secureAccountService.withdraw(1, 50);
 
         assertThat(account, notNullValue());
     }
@@ -91,7 +91,7 @@ public class SecureAccountServiceImplTest {
     public void unAuthorizedShouldNotWithdraw() {
         authenticateWithAuthorities(AuthorityUtils.NO_AUTHORITIES);
 
-        secureAccountService.withdraw(1L, 50);
+        secureAccountService.withdraw(1, 50);
     }
 
 
@@ -100,7 +100,7 @@ public class SecureAccountServiceImplTest {
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ACCOUNT_OWNER");
         authenticateWithAuthorities(authorities);
 
-        secureAccountService.transfer(1L, 2L, 10);
+        secureAccountService.transfer(1, 2, 10);
     }
 
 
@@ -108,7 +108,7 @@ public class SecureAccountServiceImplTest {
     public void unAuthorizedShouldNotTransfer() {
         authenticateWithAuthorities(AuthorityUtils.NO_AUTHORITIES);
 
-        secureAccountService.transfer(1L, 2L, 10);
+        secureAccountService.transfer(1, 2, 10);
     }
 
 
@@ -117,7 +117,7 @@ public class SecureAccountServiceImplTest {
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ACCOUNT_OWNER");
         authenticateWithAuthorities(authorities);
 
-        List<Long> allAccounts = secureAccountService.getAllAccountNumbers();
+        List<Integer> allAccounts = secureAccountService.getAllAccountNumbers();
 
         assertThat(allAccounts, notNullValue());
     }

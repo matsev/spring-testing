@@ -25,14 +25,14 @@ class AccountServiceImpl implements AccountService {
 
     @Transactional(readOnly = true)
     @Override
-    public ImmutableAccount get(Long accountNumber) {
+    public ImmutableAccount get(Integer accountNumber) {
         AccountEntity account = getAccountEntity(accountNumber);
         return new ImmutableAccount(account.getAccountNumber(), account.getBalance());
     }
 
 
     @Override
-    public void deposit(Long accountNumber, long amount) {
+    public void deposit(Integer accountNumber, int amount) {
         AccountEntity account = getAccountEntity(accountNumber);
         account.deposit(amount);
         accountRepository.save(account);
@@ -40,7 +40,7 @@ class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public ImmutableAccount withdraw(Long accountNumber, long amount) {
+    public ImmutableAccount withdraw(Integer accountNumber, int amount) {
         AccountEntity account = getAccountEntity(accountNumber);
         account.withdraw(amount);
         AccountEntity savedAccount = accountRepository.save(account);
@@ -49,7 +49,7 @@ class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public void transfer(Long fromAccountNumber, Long toAccountNumber, long amount) {
+    public void transfer(Integer fromAccountNumber, Integer toAccountNumber, int amount) {
         AccountEntity fromAccount = getAccountEntity(fromAccountNumber);
         AccountEntity toAccount = getAccountEntity(toAccountNumber);
         fromAccount.withdraw(amount);
@@ -60,7 +60,7 @@ class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public Long createAccount() {
+    public Integer createAccount() {
         AccountEntity account = new AccountEntity();
         AccountEntity savedAccount = accountRepository.save(account);
         return savedAccount.getAccountNumber();
@@ -68,7 +68,7 @@ class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public void deleteAccount(Long accountNumber) throws UnknownAccountException {
+    public void deleteAccount(Integer accountNumber) throws UnknownAccountException {
         try {
             accountRepository.delete(accountNumber);
         } catch (EmptyResultDataAccessException e) {
@@ -79,9 +79,9 @@ class AccountServiceImpl implements AccountService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Long> getAllAccountNumbers() {
+    public List<Integer> getAllAccountNumbers() {
         List<AccountEntity> accounts = accountRepository.findAll();
-        List<Long> result = new ArrayList<>(accounts.size());
+        List<Integer> result = new ArrayList<>(accounts.size());
         for (AccountEntity account : accounts) {
             result.add(account.getAccountNumber());
         }
@@ -89,7 +89,7 @@ class AccountServiceImpl implements AccountService {
     }
 
 
-    private AccountEntity getAccountEntity(Long accountNumber) throws UnknownAccountException {
+    private AccountEntity getAccountEntity(Integer accountNumber) throws UnknownAccountException {
         AccountEntity account = accountRepository.findOne(accountNumber);
         if (account == null) {
             throw new UnknownAccountException(accountNumber);

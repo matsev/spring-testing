@@ -28,9 +28,9 @@ public class BankControllerBasicTest {
 
     @Test
     public void shouldGetAccount() {
-        when(accountServiceMock.get(1L)).thenReturn(immutableAccountMock);
+        when(accountServiceMock.get(1)).thenReturn(immutableAccountMock);
 
-        ImmutableAccount account = bankController.get(1L);
+        ImmutableAccount account = bankController.get(1);
 
         assertThat(account, is(immutableAccountMock));
     }
@@ -38,16 +38,16 @@ public class BankControllerBasicTest {
 
     @Test
     public void shouldDepositToAccount() {
-        bankController.deposit(1L, new Amount(50L));
+        bankController.deposit(1, new Amount(50));
 
-        verify(accountServiceMock).deposit(1L, 50L);
+        verify(accountServiceMock).deposit(1, 50);
     }
     
     
     @Test
     public void shouldDeleteAccount() {
-        bankController.delete(1L);
+        bankController.delete(1);
         
-        verify(accountServiceMock).deleteAccount(1L);
+        verify(accountServiceMock).deleteAccount(1);
     }
 }

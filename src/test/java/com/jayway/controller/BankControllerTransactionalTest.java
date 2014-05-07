@@ -33,26 +33,26 @@ public class BankControllerTransactionalTest {
 
     @Test
     public void shouldGetAccount() {
-        ImmutableAccount immutableAccount = bankController.get(1L);
+        ImmutableAccount immutableAccount = bankController.get(1);
 
-        assertThat(immutableAccount.getBalance(), is(100L));
+        assertThat(immutableAccount.getBalance(), is(100));
     }
 
 
     @Test
     public void shouldDepositToAccount() {
-        bankController.deposit(1L, new Amount(50L));
+        bankController.deposit(1, new Amount(50));
 
-        ImmutableAccount immutableAccount = bankController.get(1L);
+        ImmutableAccount immutableAccount = bankController.get(1);
 
-        assertThat(immutableAccount.getBalance(), is(150L));
+        assertThat(immutableAccount.getBalance(), is(150));
     }
 
 
     @Test(expected = UnknownAccountException.class)
     public void shouldDeleteAccount() {
-        bankController.delete(1L);
+        bankController.delete(1);
 
-        bankController.get(1L);
+        bankController.get(1);
     }
 }

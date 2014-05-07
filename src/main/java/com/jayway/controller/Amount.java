@@ -5,21 +5,21 @@ import javax.validation.constraints.Min;
 class Amount {
 
     @Min(message = "Amount must be >= 0", value = 0)
-    private long amount;
+    private int amount;
 
     Amount() {
     }
 
-    Amount(long amount) {
+    Amount(int amount) {
         this.amount = amount;
     }
 
-    long getAmount() {
+    int getAmount() {
         return amount;
     }
 
 
-    void setAmount(long amount) {
+    void setAmount(int amount) {
         this.amount = amount;
     }
 }

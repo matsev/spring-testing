@@ -12,31 +12,31 @@ public class AccountEntity implements Account {
     @Id
     @Column(name = "account_number")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long accountNumber;
+    private Integer accountNumber;
 
     @Column(name = "balance")
     @Min(message = "Balance must be >= 0", value = 0)
-    private long balance;
+    private int balance;
 
 
     @Override
-    public Long getAccountNumber() {
+    public Integer getAccountNumber() {
         return accountNumber;
     }
 
 
     @Override
-    public long getBalance() {
+    public int getBalance() {
         return balance;
     }
 
 
-    public void deposit(long amount) {
+    public void deposit(int amount) {
         balance += amount;
     }
 
 
-    public void withdraw(long amount) {
+    public void withdraw(int amount) {
         balance -= amount;
     }
 
@@ -57,7 +57,7 @@ public class AccountEntity implements Account {
     @Override
     public int hashCode() {
         int result = accountNumber != null ? accountNumber.hashCode() : 0;
-        result = 31 * result + (int) (balance ^ (balance >>> 32));
+        result = 31 * result + balance;
         return result;
     }
 }

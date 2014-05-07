@@ -80,7 +80,7 @@ public class BankApplicationTest {
 
     @Test
     public void shouldDepositToAccount() throws Exception {
-        Map<String, Long> body = Collections.singletonMap("amount", 50L);
+        Map<String, Integer> body = Collections.singletonMap("amount", 50);
         String json = toJsonString(body);
 
         mockMvc
@@ -101,7 +101,7 @@ public class BankApplicationTest {
 
     @Test
     public void shouldNotDepositNegativeAmount() throws Exception {
-        Map<String, Long> body = Collections.singletonMap("amount", -50L);
+        Map<String, Integer> body = Collections.singletonMap("amount", -50);
         String json = toJsonString(body);
 
         mockMvc
@@ -114,7 +114,7 @@ public class BankApplicationTest {
 
     @Test
     public void shouldWithdrawFromAccount() throws Exception {
-        Map<String, Long> body = Collections.singletonMap("amount", 50L);
+        Map<String, Integer> body = Collections.singletonMap("amount", 50);
         String json = toJsonString(body);
 
         mockMvc
@@ -130,7 +130,7 @@ public class BankApplicationTest {
 
     @Test
     public void shouldNotWithdrawNegativeAmount() throws Exception {
-        Map<String, Long> body = Collections.singletonMap("amount", -50L);
+        Map<String, Integer> body = Collections.singletonMap("amount", -50);
         String json = toJsonString(body);
 
         mockMvc

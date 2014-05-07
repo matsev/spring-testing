@@ -35,8 +35,8 @@ public class TransferTest {
     @Test
     public void shouldAllowZeroAmount() {
         transfer.setAmount(0);
-        transfer.setFromAccountNumber(0L);
-        transfer.setToAccountNumber(0L);
+        transfer.setFromAccountNumber(0);
+        transfer.setToAccountNumber(0);
 
         Set<ConstraintViolation<Transfer>> constraintViolations =
                 validator.validate(transfer);
@@ -48,8 +48,8 @@ public class TransferTest {
     @Test
     public void shouldNotAllowNegativeAmount() {
         transfer.setAmount(-1);
-        transfer.setFromAccountNumber(0L);
-        transfer.setToAccountNumber(0L);
+        transfer.setFromAccountNumber(0);
+        transfer.setToAccountNumber(0);
 
         Set<ConstraintViolation<Transfer>> constraintViolations =
                 validator.validate(transfer);
@@ -64,7 +64,7 @@ public class TransferTest {
     public void shouldHaveFromAccountNumber() {
         transfer.setAmount(0);
         transfer.setFromAccountNumber(null);
-        transfer.setToAccountNumber(0L);
+        transfer.setToAccountNumber(0);
 
         Set<ConstraintViolation<Transfer>> constraintViolations =
                 validator.validate(transfer);
@@ -78,7 +78,7 @@ public class TransferTest {
     @Test
     public void shouldHaveToAccountNumber() {
         transfer.setAmount(0);
-        transfer.setFromAccountNumber(0L);
+        transfer.setFromAccountNumber(0);
         transfer.setToAccountNumber(null);
 
         Set<ConstraintViolation<Transfer>> constraintViolations =

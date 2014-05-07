@@ -5,23 +5,23 @@ import java.util.List;
 public interface AccountService {
 
 
-    ImmutableAccount get(Long accountNumber) throws UnknownAccountException;
+    ImmutableAccount get(Integer accountNumber) throws UnknownAccountException;
 
 
-    void deposit(Long accountNumber, long amount) throws UnknownAccountException;
+    void deposit(Integer accountNumber, int amount) throws UnknownAccountException;
 
 
-    ImmutableAccount withdraw(Long accountNumber, long amount) throws UnknownAccountException;
+    ImmutableAccount withdraw(Integer accountNumber, int amount) throws UnknownAccountException;
 
 
-    void transfer(Long fromAccountNumber, Long toAccountNumber, long amount) throws UnknownAccountException;
+    void transfer(Integer fromAccountNumber, Integer toAccountNumber, int amount) throws UnknownAccountException;
 
 
-    Long createAccount();
+    Integer createAccount();
 
 
-    void deleteAccount(Long accountNumber) throws UnknownAccountException;
+    void deleteAccount(Integer accountNumber) throws UnknownAccountException;
 
 
-    List<Long> getAllAccountNumbers();
+    List<Integer> getAllAccountNumbers();
 }

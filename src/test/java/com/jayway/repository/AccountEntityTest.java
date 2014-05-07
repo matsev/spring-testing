@@ -20,21 +20,21 @@ public class AccountEntityTest {
 
     @Test
     public void initialBalanceShouldBeZero() {
-        assertThat(accountEntity.getBalance(), is(0L));
+        assertThat(accountEntity.getBalance(), is(0));
     }
     
     
     @Test
     public void shouldDeposit() {
-        accountEntity.deposit(10L);
-        assertThat(accountEntity.getBalance(), is(10L));
+        accountEntity.deposit(10);
+        assertThat(accountEntity.getBalance(), is(10));
     }
 
 
     @Test
     public void shouldWithdraw() {
-        accountEntity.withdraw(10L);
-        assertThat(accountEntity.getBalance(), is(-10L));
+        accountEntity.withdraw(10);
+        assertThat(accountEntity.getBalance(), is(-10));
     }
 
 }

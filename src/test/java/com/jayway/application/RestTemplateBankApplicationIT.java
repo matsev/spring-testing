@@ -80,10 +80,10 @@ public class RestTemplateBankApplicationIT {
 
 	@Test
 	public void shouldDepositToAccount() throws Exception {
-		Map<String, Long> body = Collections.singletonMap("amount", 50L);
+		Map<String, Integer> body = Collections.singletonMap("amount", 50);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<Map<String, Long>> entity = new HttpEntity<>(body, headers);
+		HttpEntity<Map<String, Integer>> entity = new HttpEntity<>(body, headers);
 
 		ResponseEntity<Map> responseEntity = restTemplate
 				.postForEntity("http://localhost:8080/accounts/{accountNbr}/deposit",
@@ -96,10 +96,10 @@ public class RestTemplateBankApplicationIT {
 
     @Test
     public void shouldNotDepositNegativeAmount() {
-		Map<String, Long> body = Collections.singletonMap("amount", -10L);
+		Map<String, Integer> body = Collections.singletonMap("amount", -10);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<Map<String, Long>> entity = new HttpEntity<>(body, headers);
+		HttpEntity<Map<String, Integer>> entity = new HttpEntity<>(body, headers);
 
 		ResponseEntity<Void> responseEntity = restTemplate
 				.postForEntity("http://localhost:8080/accounts/{accountNbr}/deposit",
@@ -111,10 +111,10 @@ public class RestTemplateBankApplicationIT {
 
     @Test
     public void shouldWithdrawFromAccount() {
-		Map<String, Long> body = Collections.singletonMap("amount", 10L);
+		Map<String, Integer> body = Collections.singletonMap("amount", 10);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<Map<String, Long>> entity = new HttpEntity<>(body, headers);
+		HttpEntity<Map<String, Integer>> entity = new HttpEntity<>(body, headers);
 
 		ResponseEntity<Map> responseEntity = restTemplate
 				.postForEntity("http://localhost:8080/accounts/{accountNbr}/deposit",
@@ -127,10 +127,10 @@ public class RestTemplateBankApplicationIT {
 
 	@Test
     public void shouldNotOverdraw() {
-		Map<String, Long> body = Collections.singletonMap("amount", 200L);
+		Map<String, Integer> body = Collections.singletonMap("amount", 200);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<Map<String, Long>> entity = new HttpEntity<>(body, headers);
+		HttpEntity<Map<String, Integer>> entity = new HttpEntity<>(body, headers);
 
 		ResponseEntity<Map> responseEntity = restTemplate
 				.postForEntity("http://localhost:8080/accounts/{accountNbr}/withdraw",
@@ -175,14 +175,14 @@ public class RestTemplateBankApplicationIT {
 
     @Test
     public void shouldNotOverdrawDuringTransfer() {
-        Map<String, Long> body = new HashMap<String, Long>(){{
-            put("fromAccountNumber", 1L);
-            put("toAccountNumber", 2L);
-            put("amount", 300L);
+        Map<String, Integer> body = new HashMap<String, Integer>(){{
+            put("fromAccountNumber", 1);
+            put("toAccountNumber", 2);
+            put("amount", 300);
         }};
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<Map<String, Long>> entity = new HttpEntity<>(body, headers);
+		HttpEntity<Map<String, Integer>> entity = new HttpEntity<>(body, headers);
 
 		ResponseEntity<Map> responseEntity = restTemplate.postForEntity("http://localhost:8080/transfer", entity, Map.class);
 		assertThat(responseEntity.getStatusCode(), is(HttpStatus.CONFLICT));

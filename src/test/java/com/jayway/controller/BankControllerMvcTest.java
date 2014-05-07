@@ -41,8 +41,8 @@ public class BankControllerMvcTest {
 
     @Test
     public void shouldPrint() throws Exception {
-        ImmutableAccount account = new ImmutableAccount(1L, 100L);
-        when(accountServiceMock.get(1L)).thenReturn(account);
+        ImmutableAccount account = new ImmutableAccount(1, 100);
+        when(accountServiceMock.get(1)).thenReturn(account);
 
         mockMvc
                 .perform(get("/accounts/1")
@@ -53,8 +53,8 @@ public class BankControllerMvcTest {
 
     @Test
     public void shouldGetAccount() throws Exception {
-        ImmutableAccount account = new ImmutableAccount(1L, 100L);
-        when(accountServiceMock.get(1L)).thenReturn(account);
+        ImmutableAccount account = new ImmutableAccount(1, 100);
+        when(accountServiceMock.get(1)).thenReturn(account);
 
         mockMvc
                 .perform(get("/accounts/1")
@@ -68,7 +68,7 @@ public class BankControllerMvcTest {
 
     @Test
     public void shouldGetAllAccounts() throws Exception {
-        when(accountServiceMock.getAllAccountNumbers()).thenReturn(Arrays.asList(1L, 2L));
+        when(accountServiceMock.getAllAccountNumbers()).thenReturn(Arrays.asList(1, 2));
 
         mockMvc
                 .perform(get("/accounts")
@@ -82,7 +82,7 @@ public class BankControllerMvcTest {
 
     @Test
     public void shouldDepositToAccount() throws Exception {
-        Map<String, Long> body = Collections.singletonMap("amount", 50L);
+        Map<String, Integer> body = Collections.singletonMap("amount", 50);
         String json = toJsonString(body);
 
         mockMvc
@@ -91,7 +91,7 @@ public class BankControllerMvcTest {
                         .content(json))
                 .andExpect(status().isNoContent());
 
-        verify(accountServiceMock).deposit(1L, 50L);
+        verify(accountServiceMock).deposit(1, 50);
     }
 
 
@@ -101,13 +101,13 @@ public class BankControllerMvcTest {
                 .perform(delete("/accounts/1"))
                 .andExpect(status().isNoContent());
 
-        verify(accountServiceMock).deleteAccount(1L);
+        verify(accountServiceMock).deleteAccount(1);
     }
 
 
     @Test
     public void shouldNotDepositNegativeAmount() throws Exception {
-        Map<String, Long> body = Collections.singletonMap("amount", -50L);
+        Map<String, Integer> body = Collections.singletonMap("amount", -50);
         String json = toJsonString(body);
 
         mockMvc
@@ -122,7 +122,7 @@ public class BankControllerMvcTest {
 
     @Test
     public void shouldWithdrawFromAccount() throws Exception {
-        Map<String, Long> body = Collections.singletonMap("amount", 50L);
+        Map<String, Integer> body = Collections.singletonMap("amount", 50);
         String json = toJsonString(body);
 
         mockMvc
@@ -132,13 +132,13 @@ public class BankControllerMvcTest {
                         .content(json))
                 .andExpect(status().isOk());
 
-        verify(accountServiceMock).withdraw(1L, 50L);
+        verify(accountServiceMock).withdraw(1, 50);
     }
 
 
     @Test
     public void shouldNotWithdrawNegativeAmount() throws Exception {
-        Map<String, Long> body = Collections.singletonMap("amount", -50L);
+        Map<String, Integer> body = Collections.singletonMap("amount", -50);
         String json = toJsonString(body);
 
         mockMvc

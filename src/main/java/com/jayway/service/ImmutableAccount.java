@@ -4,25 +4,25 @@ import com.jayway.domain.Account;
 
 public class ImmutableAccount implements Account {
 
-    private final Long accountNumber;
+    private final Integer accountNumber;
 
-    private final long balance;
+    private final int balance;
 
 
-    public ImmutableAccount(Long accountNumber, long balance) {
+    public ImmutableAccount(Integer accountNumber, int balance) {
         this.accountNumber = accountNumber;
         this.balance = balance;
     }
 
 
     @Override
-    public Long getAccountNumber() {
+    public Integer getAccountNumber() {
         return accountNumber;
     }
 
 
     @Override
-    public long getBalance() {
+    public int getBalance() {
         return balance;
     }
 
@@ -44,7 +44,7 @@ public class ImmutableAccount implements Account {
     @Override
     public int hashCode() {
         int result = accountNumber != null ? accountNumber.hashCode() : 0;
-        result = 31 * result + (int) (balance ^ (balance >>> 32));
+        result = 31 * result + balance;
         return result;
     }
 }

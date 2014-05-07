@@ -25,23 +25,23 @@ public class AccountServiceImplMockitoTest {
 
     @Test
     public void shouldDepositToAccount() {
-        when(accountRepositoryMock.findOne(1L)).thenReturn(accountEntityMock);
+        when(accountRepositoryMock.findOne(1)).thenReturn(accountEntityMock);
 
-        accountServiceImpl.deposit(1L, 100L);
+        accountServiceImpl.deposit(1, 100);
 
-        verify(accountEntityMock).deposit(100L);
+        verify(accountEntityMock).deposit(100);
     }
 
 
     @Test
     public void shouldWithdrawFromAccount() {
         AccountEntity returnedAccountEntity = mock(AccountEntity.class);
-        when(accountRepositoryMock.findOne(2L)).thenReturn(accountEntityMock);
+        when(accountRepositoryMock.findOne(2)).thenReturn(accountEntityMock);
         when(accountRepositoryMock.save(accountEntityMock)).thenReturn(returnedAccountEntity);
 
-        accountServiceImpl.withdraw(2L, 200L);
+        accountServiceImpl.withdraw(2, 200);
 
-        verify(accountEntityMock).withdraw(200L);
+        verify(accountEntityMock).withdraw(200);
     }
 
 
@@ -50,13 +50,13 @@ public class AccountServiceImplMockitoTest {
         AccountEntity fromAccountMock = mock(AccountEntity.class);
         AccountEntity toAccountMock = mock(AccountEntity.class);
 
-        when(accountRepositoryMock.findOne(1L)).thenReturn(fromAccountMock);
-        when(accountRepositoryMock.findOne(2L)).thenReturn(toAccountMock);
+        when(accountRepositoryMock.findOne(1)).thenReturn(fromAccountMock);
+        when(accountRepositoryMock.findOne(2)).thenReturn(toAccountMock);
 
-        accountServiceImpl.transfer(1L, 2L, 500L);
+        accountServiceImpl.transfer(1, 2, 500);
 
-        verify(fromAccountMock).withdraw(500L);
-        verify(toAccountMock).deposit(500L);
+        verify(fromAccountMock).withdraw(500);
+        verify(toAccountMock).deposit(500);
     }
 
 }

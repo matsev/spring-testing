@@ -35,8 +35,8 @@ class BankController {
     @RequestMapping(value = "/accounts/{accountNumber}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    ImmutableAccount get(@PathVariable("accountNumber") long accountId) {
-        return accountService.get(accountId);
+    ImmutableAccount get(@PathVariable("accountNumber") int accountNumber) {
+        return accountService.get(accountNumber);
     }
 
 
@@ -44,7 +44,7 @@ class BankController {
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)   // 204
-    void deposit(@PathVariable("accountNumber") long accountNumber,
+    void deposit(@PathVariable("accountNumber") int accountNumber,
                  @Valid @RequestBody Amount amount)  {
         accountService.deposit(accountNumber, amount.getAmount());
     }
@@ -54,7 +54,7 @@ class BankController {
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    ImmutableAccount withdraw(@PathVariable("accountNumber") long accountNumber,
+    ImmutableAccount withdraw(@PathVariable("accountNumber") int accountNumber,
                               @Valid @RequestBody Amount amount) {
         return accountService.withdraw(accountNumber, amount.getAmount());
     }
@@ -63,7 +63,7 @@ class BankController {
     @RequestMapping(value = "/accounts",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    List<Long> getAll() {
+    List<Integer> getAll() {
         return accountService.getAllAccountNumbers();
     }
 
@@ -73,7 +73,7 @@ class BankController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)   // 201
     void create(HttpServletRequest request, HttpServletResponse response) {
-        long accountNumber = accountService.createAccount();
+        int accountNumber = accountService.createAccount();
         String locationHeader = createLocationHeader(request, accountNumber);
         response.addHeader("Location", locationHeader);
     }
@@ -82,7 +82,7 @@ class BankController {
     @RequestMapping(value = "/accounts/{accountNumber}",
             method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)   // 204
-    void delete(@PathVariable("accountNumber") long accountNumber) {
+    void delete(@PathVariable("accountNumber") int accountNumber) {
         accountService.deleteAccount(accountNumber);
     }
 
@@ -101,7 +101,7 @@ class BankController {
     void constraintViolation() {}
 
 
-    private String createLocationHeader(HttpServletRequest request, long accountNumber) {
+    private String createLocationHeader(HttpServletRequest request, int accountNumber) {
         StringBuffer url = request.getRequestURL();
         UriTemplate template = new UriTemplate(url.append("/{accountNumber}").toString());
         return template.expand(accountNumber).toASCIIString();

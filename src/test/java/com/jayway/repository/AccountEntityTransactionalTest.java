@@ -32,54 +32,54 @@ public class AccountEntityTransactionalTest {
 
     @Test
     public void canFindAccount() {
-        AccountEntity account = accountRepository.findOne(1L);
+        AccountEntity account = accountRepository.findOne(1);
 
-        assertThat(account.getAccountNumber(), is(1L));
-        assertThat(account.getBalance(), is(100L));
+        assertThat(account.getAccountNumber(), is(1));
+        assertThat(account.getBalance(), is(100));
     }
 
 
     @Test
     public void shouldDeposit() {
-        AccountEntity account = accountRepository.findOne(1L);
-        account.deposit(50L);
+        AccountEntity account = accountRepository.findOne(1);
+        account.deposit(50);
 
         entityManager.flush();
 
-        AccountEntity updated = accountRepository.findOne(1L);
-        assertThat(updated.getBalance(), is(150L));
+        AccountEntity updated = accountRepository.findOne(1);
+        assertThat(updated.getBalance(), is(150));
     }
 
 
     @Test
     public void verifyBalance() {
-        AccountEntity account = accountRepository.findOne(1L);
+        AccountEntity account = accountRepository.findOne(1);
 
-        assertThat(account.getAccountNumber(), is(1L));
-        assertThat(account.getBalance(), is(100L));
+        assertThat(account.getAccountNumber(), is(1));
+        assertThat(account.getBalance(), is(100));
     }
 
 
     @Test
     public void shouldWithdraw() {
-        AccountEntity account = accountRepository.findOne(1L);
-        account.withdraw(20L);
+        AccountEntity account = accountRepository.findOne(1);
+        account.withdraw(20);
 
         entityManager.flush();
 
-        AccountEntity updated = accountRepository.findOne(1L);
-        assertThat(updated.getBalance(), is(80L));
+        AccountEntity updated = accountRepository.findOne(1);
+        assertThat(updated.getBalance(), is(80));
     }
 
 
     @Test(expected = ConstraintViolationException.class)
     public void shouldNotAcceptNegativeBalance() {
-        AccountEntity account = accountRepository.findOne(1L);
-        account.withdraw(200L);
+        AccountEntity account = accountRepository.findOne(1);
+        account.withdraw(200);
 
         entityManager.flush();
 
-        AccountEntity updated = accountRepository.findOne(1L);
-        assertThat(updated.getBalance(), is(-100L));
+        AccountEntity updated = accountRepository.findOne(1);
+        assertThat(updated.getBalance(), is(-100));
     }
 }
