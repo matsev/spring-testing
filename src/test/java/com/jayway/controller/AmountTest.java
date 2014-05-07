@@ -1,6 +1,5 @@
 package com.jayway.controller;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -27,15 +26,9 @@ public class AmountTest {
     }
 
 
-    @Before
-    public void setUp() throws Exception {
-        amount = new Amount();
-    }
-
-
     @Test
     public void shouldAllowZeroAmount() {
-        amount.setAmount(0);
+        amount = new Amount(0);
 
         Set<ConstraintViolation<Amount>> constraintViolations =
                 validator.validate(amount);
@@ -46,7 +39,7 @@ public class AmountTest {
 
     @Test
     public void shouldNotAllowNegativeAmount() {
-        amount.setAmount(-1);
+        amount = new Amount(-1);
 
         Set<ConstraintViolation<Amount>> constraintViolations =
                 validator.validate(amount);

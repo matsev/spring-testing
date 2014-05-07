@@ -1,7 +1,6 @@
 package com.jayway.controller;
 
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -26,17 +25,10 @@ public class TransferTest {
         validator = factory.getValidator();
     }
 
-    @Before
-    public void setUp() {
-        transfer = new Transfer();
-    }
-    
 
     @Test
     public void shouldAllowZeroAmount() {
-        transfer.setAmount(0);
-        transfer.setFromAccountNumber(0);
-        transfer.setToAccountNumber(0);
+        transfer = new Transfer(0, 0, 0);
 
         Set<ConstraintViolation<Transfer>> constraintViolations =
                 validator.validate(transfer);
@@ -47,9 +39,7 @@ public class TransferTest {
 
     @Test
     public void shouldNotAllowNegativeAmount() {
-        transfer.setAmount(-1);
-        transfer.setFromAccountNumber(0);
-        transfer.setToAccountNumber(0);
+        transfer = new Transfer(0, 0, -1);
 
         Set<ConstraintViolation<Transfer>> constraintViolations =
                 validator.validate(transfer);
@@ -62,9 +52,7 @@ public class TransferTest {
 
     @Test
     public void shouldHaveFromAccountNumber() {
-        transfer.setAmount(0);
-        transfer.setFromAccountNumber(null);
-        transfer.setToAccountNumber(0);
+        transfer = new Transfer(null, 0, 0);
 
         Set<ConstraintViolation<Transfer>> constraintViolations =
                 validator.validate(transfer);
@@ -77,9 +65,7 @@ public class TransferTest {
 
     @Test
     public void shouldHaveToAccountNumber() {
-        transfer.setAmount(0);
-        transfer.setFromAccountNumber(0);
-        transfer.setToAccountNumber(null);
+        transfer = new Transfer(0, null, 0);
 
         Set<ConstraintViolation<Transfer>> constraintViolations =
                 validator.validate(transfer);
