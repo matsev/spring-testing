@@ -10,8 +10,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.RestAssured.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles("mysql")
@@ -26,21 +26,19 @@ public class RestAssuredSecureBankApplicationIT {
 		given().
 				auth().
 					basic("user", "secret").
-		expect().
-				response().
-					statusCode(HttpStatus.SC_OK).
-		when().
-				get("/accounts/1");
+        when().
+                get("/accounts/1").
+        then().
+                statusCode(HttpStatus.SC_OK);
 	}
 
 
     @Test
     public void shouldNotGetAccountIfNotProvidingCredentials() {
-        expect().
-                response().
-                    statusCode(HttpStatus.SC_UNAUTHORIZED).
         when().
-                get("/accounts/1");
+                get("/accounts/1").
+        then().
+                statusCode(HttpStatus.SC_UNAUTHORIZED);
     }
 
 
@@ -49,11 +47,10 @@ public class RestAssuredSecureBankApplicationIT {
         given().
                 auth().
                     basic("unknown", "password").
-        expect().
-                response().
-                	statusCode(HttpStatus.SC_UNAUTHORIZED).
         when().
-                get("/accounts/1");
+                get("/accounts/1").
+        then().
+                statusCode(HttpStatus.SC_UNAUTHORIZED);
     }
 
 }

@@ -52,10 +52,10 @@ public class RestAssuredBankApplicationIT {
                 auth().
                     basic("user", "secret").
                 log().all().
-        expect().
-                log().all().
         when().
-                get("/accounts/1");
+                get("/accounts/1").
+        then().
+                log().all();
     }
 
 
@@ -64,14 +64,13 @@ public class RestAssuredBankApplicationIT {
         given().
                 auth().
                     basic("user", "secret").
-        expect().
-                response().
-                    statusCode(HttpStatus.SC_OK).
-                    contentType(MediaType.APPLICATION_JSON_VALUE).
-                    body("accountNumber", is(1)).
-                    body("balance", is(100)).
         when().
-                get("/accounts/1");
+                get("/accounts/1").
+        then().
+                statusCode(HttpStatus.SC_OK).
+                contentType(MediaType.APPLICATION_JSON_VALUE).
+                body("accountNumber", is(1)).
+                body("balance", is(100));
     }
 
 
@@ -79,12 +78,11 @@ public class RestAssuredBankApplicationIT {
     public void shouldDeleteAccount() {
         given().
                 auth().
-                basic("user", "secret").
-        expect().
-                response().
-                    statusCode(HttpStatus.SC_NO_CONTENT).
+                    basic("user", "secret").
         when().
-                delete("/accounts/1");
+                delete("/accounts/1").
+        then().
+                statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
 
@@ -99,11 +97,10 @@ public class RestAssuredBankApplicationIT {
                 request().
                     contentType(MediaType.APPLICATION_JSON_VALUE).
                     body(json).
-        expect().
-                response().
-                    statusCode(HttpStatus.SC_NO_CONTENT).
         when().
-                post("/accounts/1/deposit");
+                post("/accounts/1/deposit").
+        then().
+                statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
 
@@ -118,11 +115,10 @@ public class RestAssuredBankApplicationIT {
                 request().
                     contentType(MediaType.APPLICATION_JSON_VALUE).
                     body(json).
-        expect().
-                response().
-                    statusCode(HttpStatus.SC_BAD_REQUEST).
         when().
-                post("/accounts/1/deposit");
+                post("/accounts/1/deposit").
+        then().
+                statusCode(HttpStatus.SC_BAD_REQUEST);
     }
 
 
@@ -137,13 +133,12 @@ public class RestAssuredBankApplicationIT {
                 request().
                     contentType(MediaType.APPLICATION_JSON_VALUE).
                     body(json).
-        expect().
-                response().
-                    statusCode(HttpStatus.SC_OK).
-                    body("accountNumber", is(1)).
-                    body("balance", is(90)).
         when().
-                post("/accounts/1/withdraw");
+                post("/accounts/1/withdraw").
+        then().
+                statusCode(HttpStatus.SC_OK).
+                body("accountNumber", is(1)).
+                body("balance", is(90));
     }
 
 
@@ -158,11 +153,10 @@ public class RestAssuredBankApplicationIT {
                 request().
                     contentType(MediaType.APPLICATION_JSON_VALUE).
                     body(json).
-        expect().
-                response().
-                    statusCode(HttpStatus.SC_CONFLICT).
         when().
-                post("/accounts/1/withdraw");
+                post("/accounts/1/withdraw").
+        then().
+                statusCode(HttpStatus.SC_CONFLICT);
     }
 
 
@@ -171,14 +165,13 @@ public class RestAssuredBankApplicationIT {
         given().
                 auth().
                     basic("user", "secret").
-        expect().
-                response().
-                    statusCode(HttpStatus.SC_OK).
-                    contentType(MediaType.APPLICATION_JSON_VALUE).
-                    body("size()", is(2)).
-                    body("findAll {it}", hasItems(1, 2)).
         when().
-                get("/accounts");
+                get("/accounts").
+        then().
+                statusCode(HttpStatus.SC_OK).
+                contentType(MediaType.APPLICATION_JSON_VALUE).
+                body("size()", is(2)).
+                body("findAll {it}", hasItems(1, 2));
     }
 
 
@@ -187,13 +180,12 @@ public class RestAssuredBankApplicationIT {
         given().
                 auth().
                     basic("user", "secret").
-        expect().
-                response().
-                    statusCode(HttpStatus.SC_CREATED).
-                    header(HttpHeaders.LOCATION, startsWith(baseURI)).
-                    header(HttpHeaders.LOCATION, containsString("/accounts/")).
         when().
-                post("/accounts");
+                post("/accounts").
+        then().
+                statusCode(HttpStatus.SC_CREATED).
+                header(HttpHeaders.LOCATION, startsWith(baseURI)).
+                header(HttpHeaders.LOCATION, containsString("/accounts/"));
     }
 
 
@@ -202,11 +194,10 @@ public class RestAssuredBankApplicationIT {
         given().
                 auth().
                     basic("user", "secret").
-        expect().
-                response().
-                    statusCode(HttpStatus.SC_NOT_FOUND).
         when().
-                get("/accounts/0");
+                get("/accounts/0").
+        then().
+                statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
 
@@ -226,39 +217,34 @@ public class RestAssuredBankApplicationIT {
                 request().
                     contentType(MediaType.APPLICATION_JSON_VALUE).
                     body(json).
-        expect().
-                response().
-                    statusCode(HttpStatus.SC_NO_CONTENT).
         when().
-                post("/transfer");
+                post("/transfer").
+        then().
+                statusCode(HttpStatus.SC_NO_CONTENT);
 
         // verify first account
         given().
                 auth().
                     basic("user", "secret").
-        expect().
-                response().
-                    statusCode(HttpStatus.SC_OK).
-                    contentType(MediaType.APPLICATION_JSON_VALUE).
-                    body("accountNumber", is(1)).
-                    body("balance", is(50)).
         when().
-                get("/accounts/1");
-
+                get("/accounts/1").
+        then().
+                statusCode(HttpStatus.SC_OK).
+                contentType(MediaType.APPLICATION_JSON_VALUE).
+                body("accountNumber", is(1)).
+                body("balance", is(50));
 
         // verify second account
         given().
                 auth().
                     basic("user", "secret").
-        expect().
-                response().
-                    statusCode(HttpStatus.SC_OK).
-                    contentType(MediaType.APPLICATION_JSON_VALUE).
-                    body("accountNumber", is(2)).
-                    body("balance", is(250)).
         when().
-                get("/accounts/2");
-
+                get("/accounts/2").
+        then().
+                statusCode(HttpStatus.SC_OK).
+                contentType(MediaType.APPLICATION_JSON_VALUE).
+                body("accountNumber", is(2)).
+                body("balance", is(250));
     }
 
 
@@ -277,11 +263,10 @@ public class RestAssuredBankApplicationIT {
                 request().
                     contentType(MediaType.APPLICATION_JSON_VALUE).
                     body(json).
-        expect().
-                response().
-                    statusCode(HttpStatus.SC_CONFLICT).
         when().
-                post("/transfer");
+                post("/transfer").
+        then().
+                statusCode(HttpStatus.SC_CONFLICT);
     }
 
 
@@ -293,4 +278,5 @@ public class RestAssuredBankApplicationIT {
             throw new RuntimeException(e);
         }
     }
+
 }
